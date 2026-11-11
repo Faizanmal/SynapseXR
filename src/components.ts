@@ -3,6 +3,9 @@
  */
 
 import { defineComponents } from '@iwsdk/core';
-import { AgentNodeComponent } from './agents/agent-component.js';
+import {
+  AgentNodeComponent,
+  CompanionDroneComponent,
+} from './agents/agent-component.js';
 
-export default defineComponents([AgentNodeComponent]);
+export default defineComponents([AgentNodeComponent, CompanionDroneComponent]);

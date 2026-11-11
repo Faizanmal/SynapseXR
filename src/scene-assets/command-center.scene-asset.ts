@@ -130,6 +130,35 @@ export function createCommandPlatform(): Group {
   innerDisc.position.y = 0.081;
   root.add(innerDisc);
 
+  // Lightweight holographic panel support pylons (Left & Right flanking arms)
+  const leftPanelSupport = createScenePrimitiveObject(
+    {
+      geometry: {
+        type: 'cylinder',
+        radius: 0.025,
+        height: 1.15,
+      },
+    },
+    metallicPedestalMaterial,
+  );
+  leftPanelSupport.name = 'panel-support-left';
+  leftPanelSupport.position.set(-1.35, 0.575, -0.55);
+  root.add(leftPanelSupport);
+
+  const rightPanelSupport = createScenePrimitiveObject(
+    {
+      geometry: {
+        type: 'cylinder',
+        radius: 0.025,
+        height: 1.15,
+      },
+    },
+    metallicPedestalMaterial,
+  );
+  rightPanelSupport.name = 'panel-support-right';
+  rightPanelSupport.position.set(1.35, 0.575, -0.55);
+  root.add(rightPanelSupport);
+
   return root;
 }
 

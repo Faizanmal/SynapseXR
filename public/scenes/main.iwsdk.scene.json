@@ -200,6 +200,27 @@
       }
     },
     {
+      "id": "companion-drone",
+      "name": "AI Companion Drone",
+      "content": {
+        "type": "asset",
+        "asset": "companion-drone"
+      },
+      "transform": {
+        "position": [0.68, 1.38, -0.72]
+      },
+      "components": {
+        "CompanionDroneComponent": {
+          "baseY": 1.38,
+          "mood": "ready"
+        },
+        "RayInteractable": {},
+        "DistanceGrabbable": {
+          "movementMode": "MoveFromTarget"
+        }
+      }
+    },
+    {
       "id": "welcome-panel",
       "name": "Welcome Panel",
       "content": {

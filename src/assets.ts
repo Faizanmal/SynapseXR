@@ -5,6 +5,7 @@
 
 import { AssetType, defineAssets } from '@iwsdk/core';
 import {
+  createCompanionFallback,
   createPlannerAgent,
   createResearcherAgent,
   createExecutorAgent,
@@ -30,6 +31,13 @@ const uikitml = (fileName: string, name: string) => ({
   name,
 });
 
+const gltf = (fileName: string, name: string) => ({
+  url: publicAssetUrl(`models/${fileName}`),
+  type: AssetType.GLTF,
+  priority: 'critical' as const,
+  name,
+});
+
 export default defineAssets({
   // Command Center Architecture & Set
   'command-floor': createCommandFloor(),
@@ -48,6 +56,10 @@ export default defineAssets({
   'agent-researcher': createResearcherAgent(),
   'agent-executor': createExecutorAgent(),
   'agent-reviewer': createReviewerAgent(),
+
+  // Optional AI Companion Drone (GLB + Procedural Fallback)
+  'companion-drone': gltf('companion-drone.glb', 'AI Companion Drone'),
+  'companion-fallback': createCompanionFallback(),
 
   // UI Panels
   'welcome-panel': uikitml('welcome.uikitml', 'Welcome Panel'),

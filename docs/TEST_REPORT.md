@@ -17,6 +17,33 @@
 
 ## 2. Test Execution Log
 
+### Test Run: TR-006 (Phase 5 Custom 3D Models, GLB Pipeline & State Animations Verification)
+- **Date**: 2026-11-12
+- **Focus**: Procedural 3D agent sub-hierarchies, programmatic glTF 2.0 `.glb` generation (`public/models/companion-drone.glb`), `AssetType.GLTF` manifest registration, procedural fallback resilience, and state-driven delta-time animation metrics.
+
+| Test ID | Description | Command | Expected Result | Actual Result | Status |
+|---|---|---|---|---|---|
+| TR-006-A | Binary GLB Asset Generation | `node scripts/generate-glb.mjs` | Valid glTF 2.0 binary generated in `public/models/` | `companion-drone.glb` generated (17,844 bytes, 3 named mesh parts) | PASS |
+| TR-006-B | Strict TypeScript Compilation | `npm run typecheck` | 0 type errors across updated assets, components, and systems | 0 errors, Exit code 0 | PASS |
+| TR-006-C | Full Vitest Unit Suite | `npx vitest run --config vitest.config.ts` | 23/23 unit tests pass across 3 test files | 23 passed (including 8 new model & animation tests) | PASS |
+| TR-006-D | Production Bundle Build & Clean | `npm run build` + clean `dist/` | Full bundle compiles cleanly; `dist` removed per rule | Built without errors and cleaned | PASS |
+
+---
+
+### Test Run: TR-005 (Phase 4 Immersive Command Center & 3D Render Verification)
+- **Date**: 2026-11-11
+- **Focus**: Procedural 3D Command Center architecture, 4 holographic agent archetypes, ECS AgentNodeSystem, seated ergonomic placement, and real Chromium render screenshot capture.
+
+| Test ID | Description | Command | Expected Result | Actual Result | Status |
+|---|---|---|---|---|---|
+| TR-005-A | Strict TypeScript Compilation | `npm run typecheck` | 0 type errors across new scene assets and ECS system | 0 errors, Exit code 0 | PASS |
+| TR-005-B | Full Vitest Unit Suite | `npx vitest run --config vitest.config.ts` | 15/15 unit tests pass | 15 passed in 3.21s | PASS |
+| TR-005-C | Production Bundle Build | `npm run build` | Full bundle compiles without regressions | Built in 51.17s without error | PASS |
+| TR-005-D | Scene JSON Endpoint Delivery | HTTP GET `/scenes/main.iwsdk.scene.json` | 200 OK with new node composition | HTTP 200 (5,506 bytes) | PASS |
+| TR-005-E | Real Chromium Scene Render Capture | Playwright automated browser screenshot | Generates actual 1280x720 PNG of 3D scene | Saved to `docs/command_center_render.png` (528 kB) | PASS |
+
+---
+
 ### Test Run: TR-004 (Phase 3 Workflow Domain Models & State Store Verification)
 - **Date**: 2026-11-11
 - **Focus**: Typed domain models, DAG cycle & edge validation, IndexedDB/localStorage persistence, schema migration, and undo/redo history.
