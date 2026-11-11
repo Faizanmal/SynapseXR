@@ -42,3 +42,4 @@ export const AGENT_SPECS: Record<AgentRole, AgentVisualSpec> = {
     description: 'Audits safety, compliance, accuracy, and validates acceptance gates.',
   },
 };
+

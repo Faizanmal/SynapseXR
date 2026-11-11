@@ -48,3 +48,4 @@ export function handleUncaughtError(error: unknown, contextName = 'Global'): voi
   const errorMessage = error instanceof Error ? error.message : String(error);
   console.error(`[Error Handler] Uncaught exception in ${contextName}:`, error);
 }
+

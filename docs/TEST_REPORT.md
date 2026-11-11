@@ -17,6 +17,19 @@
 
 ## 2. Test Execution Log
 
+### Test Run: TR-003 (Phase 2 Project Bootstrap & Architecture Verification)
+- **Date**: 2026-11-11
+- **Focus**: Modular layer isolation, typed event bus, central config, state store, and Vitest test suite.
+
+| Test ID | Description | Command | Expected Result | Actual Result | Status |
+|---|---|---|---|---|---|
+| TR-003-A | Vitest Test Suite Execution | `npx vitest run --config vitest.config.ts` | All architecture unit tests pass | 3 passed (TypedEventBus, StateStore, AgentSpecs) | PASS |
+| TR-003-B | Strict TypeScript Compilation | `npm run typecheck` | 0 errors across all new modular files | 0 errors, Exit code 0 | PASS |
+| TR-003-C | Production Build Verification | `npm run build` | Full production bundle compiles | Built in 1m 9s without errors | PASS |
+| TR-003-D | Git Repository Initialization | `git init` & `git commit` | Clean initial baseline commit | Commit `644a869` created cleanly | PASS |
+
+---
+
 ### Test Run: TR-002 (Phase 1 Environment Validation & XR Smoke Test)
 - **Date**: 2026-11-11
 - **Focus**: Hardware environment audit, dev server launch, IWER injection, and asset delivery.

@@ -37,3 +37,4 @@ describe('AgentSphere Architecture & State Modules', () => {
     expect(AGENT_SPECS.reviewer.displayName).toBe('Reviewer');
   });
 });
+
