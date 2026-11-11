@@ -53,7 +53,22 @@
 
 ---
 
-### Phase 3: Spatial Command Center & 3D Agent Holograms (P0)
+### Phase 3: Workflow Domain Models & State Store (P0/P1)
+- [x] Define TypeScript schemas for `AgentRole`, `AgentStatus`, `WorkflowNode`, `WorkflowEdge`, `Workflow`, `AgentResult`, `WorkflowRun` ([`src/workflows/domain-types.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/domain-types.ts))
+- [x] Implement DAG validation engine detecting cycles (3-color DFS), self-links, missing nodes, and duplicate edges ([`src/workflows/graph-validator.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/graph-validator.ts))
+- [x] Implement seed preset workflow: "Plan a SaaS launch in 14 days" ([`src/workflows/seed-workflow.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/seed-workflow.ts))
+- [x] Implement browser storage adapter with schema versioning and migration ([`src/workflows/storage.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/storage.ts))
+- [x] Implement central `WorkflowStore` with CRUD commands, graph mutation validations, and undo/redo history ([`src/workflows/workflow-store.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/workflow-store.ts))
+- [x] Author comprehensive unit tests covering CRUD, cycles, duplicate edges, persistence, and undo/redo ([`src/tests/workflow-domain.test.ts`](file:///e:/Hackathons/devpost/meta_vr/src/tests/workflow-domain.test.ts))
+- [x] Pass all unit tests (15/15 tests passing)
+- [x] Verify strict TypeScript compilation (`npm run typecheck`: 0 errors)
+- [x] Verify production bundle build (`npm run build`: pass)
+- [x] Commit baseline changes (`bbff252`)
+- **Status**: PASSED
+
+---
+
+### Phase 4: Spatial Command Center & 3D Agent Holograms (P0)
 - [ ] Implement seated-friendly Sci-Fi Command Center procedural environment (curved pedestal console, ambient sci-fi lighting)
 - [ ] Build 4 distinct procedural 3D holographic agent meshes (Planner, Researcher, Executor, Reviewer)
 - [ ] Implement `AgentNode` component and `AgentNodeSystem`

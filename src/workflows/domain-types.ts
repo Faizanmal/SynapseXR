@@ -81,3 +81,4 @@ export interface WorkflowRun {
 }
 
 export const CURRENT_WORKFLOW_SCHEMA_VERSION = 1;
+

@@ -17,6 +17,21 @@
 
 ## 2. Test Execution Log
 
+### Test Run: TR-004 (Phase 3 Workflow Domain Models & State Store Verification)
+- **Date**: 2026-11-11
+- **Focus**: Typed domain models, DAG cycle & edge validation, IndexedDB/localStorage persistence, schema migration, and undo/redo history.
+
+| Test ID | Description | Command | Expected Result | Actual Result | Status |
+|---|---|---|---|---|---|
+| TR-004-A | Full Vitest Unit Suite | `npx vitest run --config vitest.config.ts` | 15 unit tests pass | 15 passed across 2 test files | PASS |
+| TR-004-B | DAG Cycle & Edge Validation | Unit tests | Rejects self-links, duplicate edges, and cyclical loops | Safely rejected with descriptive error strings | PASS |
+| TR-004-C | Graph Undo/Redo Engine | Unit tests | Step-by-step state snapshot undo/redo | Verified step-by-step restoration | PASS |
+| TR-004-D | Storage Migration & Recovery | Unit tests | Migrates legacy schemas and restores workflows | Verified version 0->1 migration and round-trip restore | PASS |
+| TR-004-E | Strict TypeScript Compilation | `npm run typecheck` | 0 type errors | 0 errors, Exit code 0 | PASS |
+| TR-004-F | Production Bundle Build | `npm run build` | Full bundle compiles without regressions | Built in 1m 17s without failure | PASS |
+
+---
+
 ### Test Run: TR-003 (Phase 2 Project Bootstrap & Architecture Verification)
 - **Date**: 2026-11-11
 - **Focus**: Modular layer isolation, typed event bus, central config, state store, and Vitest test suite.
