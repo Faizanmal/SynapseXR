@@ -97,3 +97,4 @@ class GeminiProvider(BaseLLMProvider):
         except (json.JSONDecodeError, KeyError, IndexError, ValueError) as parse_err:
             logger.error(f"Failed to parse structured JSON from Gemini candidate: {parse_err}")
             raise RuntimeError(f"Invalid JSON returned by Gemini: {parse_err}")
+

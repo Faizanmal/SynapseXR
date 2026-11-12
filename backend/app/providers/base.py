@@ -36,3 +36,4 @@ class BaseLLMProvider(ABC):
         Must return a parsed dictionary conforming to the role's output schema.
         """
         pass
+

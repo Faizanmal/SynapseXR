@@ -12,6 +12,7 @@ import {
   executeSpatialAction,
   resolveWorkflowNodeId,
 } from '../../interactions/spatial-input-adapter.js';
+import { workflowExporter } from '../../services/workflow-exporter.js';
 import type {
   AgentResult,
   AgentRole,
@@ -183,6 +184,24 @@ export class WorkflowToolbar {
       });
     }
     return restored;
+  }
+
+  exportReport(): { success: boolean; filename: string; content: string } {
+    const wf = workflowStore.getWorkflow();
+    const allResults = workflowStore.getAllExecutionResults();
+    const md = workflowExporter.generateMarkdownReport({
+      workflow: wf,
+      results: allResults,
+      exportedAt: new Date().toISOString(),
+      executionMode: 'demo',
+    });
+    const filename = `agentsphere-launch-report-${Date.now().toString(36)}.md`;
+    const downloaded = workflowExporter.downloadMarkdownFile(filename, md);
+    interactionState.setState({
+      lastActionType: 'export_report',
+      lastActionSummary: `Exported Markdown report: ${filename}`,
+    });
+    return { success: downloaded, filename, content: md };
   }
 
   launchWorkflow(): { launched: boolean; validation: GraphValidationResult } {

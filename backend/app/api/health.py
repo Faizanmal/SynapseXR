@@ -22,3 +22,4 @@ async def get_health() -> HealthResponse:
         timestamp=datetime.now(timezone.utc).isoformat(),
         uptimeSeconds=round(uptime_seconds, 2),
     )
+

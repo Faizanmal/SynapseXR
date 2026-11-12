@@ -57,7 +57,11 @@ export type SpatialActionType =
   | 'auto_layout'
   | 'undo_edit'
   | 'redo_edit'
-  | 'save_workflow';
+  | 'save_workflow'
+  | 'export_report'
+  | 'toggle_high_contrast'
+  | 'skip_tutorial'
+  | 'restart_tutorial';
 
 export interface WorkspaceBounds {
   minX: number;

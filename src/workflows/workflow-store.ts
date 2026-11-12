@@ -409,6 +409,14 @@ export class WorkflowStore {
     return this.results.get(resultId);
   }
 
+  getAllExecutionResults(): Record<string, AgentResult> {
+    const map: Record<string, AgentResult> = {};
+    for (const [id, res] of this.results.entries()) {
+      map[id] = res;
+    }
+    return map;
+  }
+
   approveResult(nodeId: string): boolean {
     const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
     if (!node) return false;

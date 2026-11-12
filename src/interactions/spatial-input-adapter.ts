@@ -4,8 +4,13 @@
  */
 
 import { GrabSystem, InputSystem, World } from '@iwsdk/core';
+import { config } from '../core/config.js';
 import { eventBus } from '../core/event-bus.js';
 import { logger } from '../core/logger.js';
+import { spatialAudioService } from '../services/spatial-audio.js';
+import { workflowExporter } from '../services/workflow-exporter.js';
+import { onboardingTutorial } from '../ui/onboarding-tutorial.js';
+import { spatialUiController } from '../ui/spatial-ui-controller.js';
 import { typedWorkflowEngine } from '../workflows/execution/typed-workflow-engine.js';
 import { validateWorkflowGraph } from '../workflows/graph-validator.js';
 import { templateSelector } from '../workflows/template-selector.js';
@@ -58,7 +63,10 @@ export function executeSpatialAction(
     case 'start_run': {
       nextInspectorOpen = true;
       summary = 'Initiated typed workflow execution pipeline';
+      spatialAudioService.play('start');
+      onboardingTutorial.advanceStep();
       void typedWorkflowEngine.startExecution().catch((err) => {
+        spatialAudioService.play('error');
         logger.error('SpatialInputAdapter', `Execution pipeline error: ${(err as Error).message}`);
       });
       break;
@@ -66,6 +74,7 @@ export function executeSpatialAction(
 
     case 'cancel_run': {
       typedWorkflowEngine.cancelExecution();
+      spatialAudioService.play('rejected');
       summary = 'Cancelled active workflow execution';
       break;
     }
@@ -75,6 +84,7 @@ export function executeSpatialAction(
       workflowStore.resetWorkflow();
       nextSelectedNodeId = null;
       nextSelectedEdgeId = null;
+      spatialAudioService.play('tap');
       summary = 'Reset workflow execution states to ready';
       break;
     }
@@ -92,9 +102,14 @@ export function executeSpatialAction(
         }
       }
       nextInspectorOpen = true;
-      summary = approved
-        ? 'Approved current action in live execution pipeline'
-        : 'Approved action recorded';
+      if (approved) {
+        spatialAudioService.play('approved');
+        onboardingTutorial.advanceStep();
+        summary = 'Approved current action in live execution pipeline';
+      } else {
+        spatialAudioService.play('tap');
+        summary = 'Approved action recorded';
+      }
       break;
     }
 
@@ -111,6 +126,7 @@ export function executeSpatialAction(
         }
       }
       nextInspectorOpen = true;
+      spatialAudioService.play('rejected');
       summary = rejected
         ? 'Rejected current action in live execution pipeline'
         : 'Rejected proposed action';
@@ -183,7 +199,47 @@ export function executeSpatialAction(
 
     case 'save_workflow': {
       void workflowStore.persistCurrent();
+      spatialAudioService.play('tap');
       summary = `Saved workflow "${workflowStore.getWorkflow().title}"`;
+      break;
+    }
+
+    case 'export_report': {
+      const wf = workflowStore.getWorkflow();
+      const allResults = workflowStore.getAllExecutionResults();
+      const md = workflowExporter.generateMarkdownReport({
+        workflow: wf,
+        results: allResults,
+        exportedAt: new Date().toISOString(),
+        executionMode: config.app.isDemo ? 'demo' : 'live',
+      });
+      const filename = `agentsphere-launch-plan-${Date.now().toString(36)}.md`;
+      const downloaded = workflowExporter.downloadMarkdownFile(filename, md);
+      spatialAudioService.play('celebration');
+      summary = downloaded
+        ? `Exported Markdown launch report (${filename})`
+        : `Generated Markdown launch report (${md.length} chars)`;
+      break;
+    }
+
+    case 'toggle_high_contrast': {
+      const enabled = spatialUiController.toggleHighContrast();
+      spatialAudioService.play('tap');
+      summary = enabled ? 'Enabled high-contrast accessibility mode' : 'Disabled high-contrast accessibility mode';
+      break;
+    }
+
+    case 'skip_tutorial': {
+      onboardingTutorial.skipTutorial();
+      spatialAudioService.play('tap');
+      summary = 'Skipped onboarding tutorial';
+      break;
+    }
+
+    case 'restart_tutorial': {
+      onboardingTutorial.restartTutorial();
+      spatialAudioService.play('tap');
+      summary = 'Restarted hands-first onboarding tutorial';
       break;
     }
   }

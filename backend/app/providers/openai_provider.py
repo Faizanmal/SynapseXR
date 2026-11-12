@@ -86,3 +86,4 @@ class OpenAIProvider(BaseLLMProvider):
         except (json.JSONDecodeError, KeyError, IndexError, ValueError) as parse_err:
             logger.error(f"Failed to parse structured JSON from OpenAI choice: {parse_err}")
             raise RuntimeError(f"Invalid JSON returned by OpenAI: {parse_err}")
+
