@@ -15,6 +15,7 @@ import {
 } from './interactions/selection-system.js';
 import { executeSpatialAction } from './interactions/spatial-input-adapter.js';
 import { PanelSystem } from './panel.js';
+import { typedWorkflowEngine } from './workflows/execution/typed-workflow-engine.js';
 import { connectionHandle } from './workflows/graph-editor/connection-handle.js';
 import { graphSelectionSystem } from './workflows/graph-editor/graph-selection-system.js';
 import { WorkflowGraphSystem } from './workflows/graph-editor/workflow-graph-system.js';
@@ -38,6 +39,7 @@ declare global {
       templateSelector: typeof templateSelector;
       connectionHandle: typeof connectionHandle;
       graphSelectionSystem: typeof graphSelectionSystem;
+      typedWorkflowEngine: typeof typedWorkflowEngine;
     };
   }
 }
@@ -65,6 +67,7 @@ World.create(
       templateSelector,
       connectionHandle,
       graphSelectionSystem,
+      typedWorkflowEngine,
     };
   }
 });

@@ -6,6 +6,7 @@
 import { GrabSystem, InputSystem, World } from '@iwsdk/core';
 import { eventBus } from '../core/event-bus.js';
 import { logger } from '../core/logger.js';
+import { typedWorkflowEngine } from '../workflows/execution/typed-workflow-engine.js';
 import { validateWorkflowGraph } from '../workflows/graph-validator.js';
 import { templateSelector } from '../workflows/template-selector.js';
 import { workflowStore } from '../workflows/workflow-store.js';
@@ -55,32 +56,22 @@ export function executeSpatialAction(
 
   switch (action) {
     case 'start_run': {
-      workflowStore.updateNodeStatus('node-planner', 'completed');
-      workflowStore.updateNodeStatus('node-researcher', 'completed');
-      workflowStore.updateNodeStatus('node-executor', 'running');
-      workflowStore.updateNodeStatus('node-reviewer', 'waiting_approval');
       nextInspectorOpen = true;
-      summary =
-        'Started workflow execution: Planner & Researcher completed, Executor running, Reviewer waiting approval';
-      eventBus.emit('workflow:start', {
-        workflowId: workflowStore.getWorkflow().id,
-        missionTitle: workflowStore.getWorkflow().title,
+      summary = 'Initiated typed workflow execution pipeline';
+      void typedWorkflowEngine.startExecution().catch((err) => {
+        logger.error('SpatialInputAdapter', `Execution pipeline error: ${(err as Error).message}`);
       });
       break;
     }
 
     case 'cancel_run': {
-      const wf = workflowStore.getWorkflow();
-      for (const node of wf.nodes) {
-        if (node.status === 'running' || node.status === 'waiting_approval') {
-          workflowStore.updateNodeStatus(node.id, 'cancelled');
-        }
-      }
+      typedWorkflowEngine.cancelExecution();
       summary = 'Cancelled active workflow execution';
       break;
     }
 
     case 'reset_workflow': {
+      typedWorkflowEngine.cancelExecution();
       workflowStore.resetWorkflow();
       nextSelectedNodeId = null;
       nextSelectedEdgeId = null;
@@ -89,52 +80,40 @@ export function executeSpatialAction(
     }
 
     case 'approve_action': {
-      const wf = workflowStore.getWorkflow();
-      const targetNode =
-        wf.nodes.find((n) => n.status === 'waiting_approval') ??
-        wf.nodes.find((n) => n.id === resolveWorkflowNodeId(state.selectedNodeId ?? '')) ??
-        wf.nodes.find((n) => n.role === 'reviewer') ??
-        wf.nodes[wf.nodes.length - 1];
-
-      if (targetNode) {
-        workflowStore.saveExecutionResult({
-          id: `res-approved-${nowMs}`,
-          nodeId: targetNode.id,
-          summary: `Human-in-the-loop approval granted for ${targetNode.label}`,
-          structuredOutput: { approvedBy: 'xr-hand-operator', timestamp: nowMs },
-          evidenceReferences: ['spatial-approval-console'],
-          warnings: [],
-          executionMode: 'mock',
-          timestamps: {
-            startedAt: new Date(nowMs - 500).toISOString(),
-            completedAt: new Date(nowMs).toISOString(),
-          },
-        });
-        workflowStore.approveResult(targetNode.id);
+      let approved = false;
+      if (typedWorkflowEngine.getState() === 'waiting_approval') {
+        approved = typedWorkflowEngine.approveCurrentAction();
+      } else {
+        const wf = workflowStore.getWorkflow();
+        const target = wf.nodes.find((n) => n.status === 'waiting_approval') ?? wf.nodes.find((n) => n.role === 'reviewer');
+        if (target) {
+          workflowStore.approveResult(target.id);
+          approved = true;
+        }
       }
-      workflowStore.updateNodeStatus('node-executor', 'completed');
-      workflowStore.updateNodeStatus('node-reviewer', 'completed');
       nextInspectorOpen = true;
-      summary = `Approved proposed action (${targetNode?.label ?? 'Reviewer'})`;
+      summary = approved
+        ? 'Approved current action in live execution pipeline'
+        : 'Approved action recorded';
       break;
     }
 
     case 'reject_action': {
-      const wf = workflowStore.getWorkflow();
-      const targetNode =
-        wf.nodes.find((n) => n.status === 'waiting_approval') ??
-        wf.nodes.find((n) => n.id === resolveWorkflowNodeId(state.selectedNodeId ?? '')) ??
-        wf.nodes.find((n) => n.role === 'reviewer') ??
-        wf.nodes[wf.nodes.length - 1];
-
-      if (targetNode) {
-        workflowStore.rejectResult(
-          targetNode.id,
-          'Operator rejected proposed action in XR Command Center',
-        );
+      let rejected = false;
+      if (typedWorkflowEngine.getState() === 'waiting_approval') {
+        rejected = typedWorkflowEngine.rejectCurrentAction('Operator rejected proposed action in XR Command Center');
+      } else {
+        const wf = workflowStore.getWorkflow();
+        const target = wf.nodes.find((n) => n.status === 'waiting_approval') ?? wf.nodes.find((n) => n.role === 'reviewer');
+        if (target) {
+          workflowStore.rejectResult(target.id, 'Operator rejected proposed action in XR Command Center');
+          rejected = true;
+        }
       }
       nextInspectorOpen = true;
-      summary = `Rejected proposed action (${targetNode?.label ?? 'Reviewer'})`;
+      summary = rejected
+        ? 'Rejected current action in live execution pipeline'
+        : 'Rejected proposed action';
       break;
     }
 

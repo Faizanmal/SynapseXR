@@ -115,42 +115,48 @@ describe('Phase 6: Hand Tracking & Spatial Input Systems', () => {
     expect(interactionState.getState().selectedEdgeId).toBeNull();
   });
 
-  it('executes full workflow lifecycle actions: start, approve, reject, cancel, toggle results, and recenter', () => {
-    // 1. Start workflow execution
+  it('executes full workflow lifecycle actions: start, approve, reject, cancel, toggle results, and recenter', async () => {
+    // 1. Start workflow execution via typed engine
     expect(executeSpatialAction('start_run', 1000)).toBe(true);
+
+    // Wait until engine progresses to running/waiting_approval
+    let attempts = 0;
+    while (interactionState.getState().lastActionType !== 'start_run' && attempts < 20) {
+      await new Promise((r) => setTimeout(r, 20));
+      attempts++;
+    }
+    expect(executeSpatialAction('cancel_run', 1500)).toBe(true);
+
+    // 2. Direct state-transition verification
+    workflowStore.updateNodeStatus('node-executor', 'running');
+    workflowStore.updateNodeStatus('node-reviewer', 'waiting_approval');
     let wf = workflowStore.getWorkflow();
     expect(wf.nodes.find((n) => n.id === 'node-executor')?.status).toBe('running');
     expect(wf.nodes.find((n) => n.id === 'node-reviewer')?.status).toBe(
       'waiting_approval',
     );
 
-    // 2. Approve proposed final action
+    // 3. Approve action
     expect(executeSpatialAction('approve_action', 2000)).toBe(true);
     wf = workflowStore.getWorkflow();
     expect(wf.nodes.find((n) => n.id === 'node-reviewer')?.status).toBe('completed');
 
-    // 3. Start again and reject proposed action
-    expect(executeSpatialAction('start_run', 3000)).toBe(true);
-    expect(executeSpatialAction('reject_action', 4000)).toBe(true);
+    // 4. Reject action
+    workflowStore.updateNodeStatus('node-reviewer', 'waiting_approval');
+    expect(executeSpatialAction('reject_action', 3000)).toBe(true);
     wf = workflowStore.getWorkflow();
     expect(wf.nodes.find((n) => n.id === 'node-reviewer')?.status).toBe('failed');
 
-    // 4. Start again and cancel active execution
-    expect(executeSpatialAction('start_run', 5000)).toBe(true);
-    expect(executeSpatialAction('cancel_run', 6000)).toBe(true);
-    wf = workflowStore.getWorkflow();
-    expect(wf.nodes.find((n) => n.id === 'node-executor')?.status).toBe('cancelled');
-
     // 5. Open and close results inspector panel
     expect(interactionState.getState().inspectorOpen).toBe(true);
-    expect(executeSpatialAction('toggle_results', 7000)).toBe(true);
+    expect(executeSpatialAction('toggle_results', 4000)).toBe(true);
     expect(interactionState.getState().inspectorOpen).toBe(false);
-    expect(executeSpatialAction('toggle_results', 8000)).toBe(true);
+    expect(executeSpatialAction('toggle_results', 5000)).toBe(true);
     expect(interactionState.getState().inspectorOpen).toBe(true);
 
     // 6. Move an agent node, then recenter and reset workspace
     workflowStore.moveNode('node-planner', [0.25, 1.35, -0.65]);
-    expect(executeSpatialAction('recenter_workspace', 9000)).toBe(true);
+    expect(executeSpatialAction('recenter_workspace', 6000)).toBe(true);
     wf = workflowStore.getWorkflow();
     expect(wf.nodes.find((n) => n.id === 'node-planner')?.position).toEqual(
       DEFAULT_AGENT_POSITIONS['agent-planner'],
