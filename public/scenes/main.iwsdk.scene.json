@@ -128,8 +128,12 @@
           "baseY": 1.15
         },
         "RayInteractable": {},
-        "DistanceGrabbable": {
-          "movementMode": "MoveFromTarget"
+        "PokeInteractable": {},
+        "OneHandGrabbable": {
+          "rotate": false,
+          "translate": true,
+          "translateMin": [-1.15, 0.82, -1.45],
+          "translateMax": [1.15, 1.65, -0.42]
         }
       }
     },
@@ -150,8 +154,12 @@
           "baseY": 1.25
         },
         "RayInteractable": {},
-        "DistanceGrabbable": {
-          "movementMode": "MoveFromTarget"
+        "PokeInteractable": {},
+        "OneHandGrabbable": {
+          "rotate": false,
+          "translate": true,
+          "translateMin": [-1.15, 0.82, -1.45],
+          "translateMax": [1.15, 1.65, -0.42]
         }
       }
     },
@@ -172,8 +180,12 @@
           "baseY": 1.25
         },
         "RayInteractable": {},
-        "DistanceGrabbable": {
-          "movementMode": "MoveFromTarget"
+        "PokeInteractable": {},
+        "OneHandGrabbable": {
+          "rotate": false,
+          "translate": true,
+          "translateMin": [-1.15, 0.82, -1.45],
+          "translateMax": [1.15, 1.65, -0.42]
         }
       }
     },
@@ -194,9 +206,226 @@
           "baseY": 1.15
         },
         "RayInteractable": {},
-        "DistanceGrabbable": {
-          "movementMode": "MoveFromTarget"
+        "PokeInteractable": {},
+        "OneHandGrabbable": {
+          "rotate": false,
+          "translate": true,
+          "translateMin": [-1.15, 0.82, -1.45],
+          "translateMax": [1.15, 1.65, -0.42]
         }
+      }
+    },
+    {
+      "id": "edge-planner-researcher",
+      "name": "Workflow Connection Planner to Researcher",
+      "content": {
+        "type": "asset",
+        "asset": "workflow-connection-beam"
+      },
+      "transform": {
+        "position": [-0.32, 1.2, -0.835]
+      },
+      "components": {
+        "WorkflowEdgeComponent": {
+          "edgeId": "edge-planner-researcher",
+          "sourceNodeId": "node-planner",
+          "targetNodeId": "node-researcher",
+          "sourceAgentId": "agent-planner",
+          "targetAgentId": "agent-researcher"
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "edge-researcher-executor",
+      "name": "Workflow Connection Researcher to Executor",
+      "content": {
+        "type": "asset",
+        "asset": "workflow-connection-beam"
+      },
+      "transform": {
+        "position": [0, 1.25, -0.92]
+      },
+      "components": {
+        "WorkflowEdgeComponent": {
+          "edgeId": "edge-researcher-executor",
+          "sourceNodeId": "node-researcher",
+          "targetNodeId": "node-executor",
+          "sourceAgentId": "agent-researcher",
+          "targetAgentId": "agent-executor"
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "edge-executor-reviewer",
+      "name": "Workflow Connection Executor to Reviewer",
+      "content": {
+        "type": "asset",
+        "asset": "workflow-connection-beam"
+      },
+      "transform": {
+        "position": [0.32, 1.2, -0.835]
+      },
+      "components": {
+        "WorkflowEdgeComponent": {
+          "edgeId": "edge-executor-reviewer",
+          "sourceNodeId": "node-executor",
+          "targetNodeId": "node-reviewer",
+          "sourceAgentId": "agent-executor",
+          "targetAgentId": "agent-reviewer"
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-start-run",
+      "name": "Start Workflow Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-start-run"
+      },
+      "transform": {
+        "position": [-0.45, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "start_run",
+          "label": "Start Run",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-cancel-run",
+      "name": "Cancel Workflow Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-cancel-run"
+      },
+      "transform": {
+        "position": [-0.27, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "cancel_run",
+          "label": "Cancel Run",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-approve",
+      "name": "Approve Action Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-approve"
+      },
+      "transform": {
+        "position": [-0.09, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "approve_action",
+          "label": "Approve Action",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-reject",
+      "name": "Reject Action Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-reject"
+      },
+      "transform": {
+        "position": [0.09, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "reject_action",
+          "label": "Reject Action",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-toggle-results",
+      "name": "Toggle Results Panel Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-toggle-results"
+      },
+      "transform": {
+        "position": [0.27, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "toggle_results",
+          "label": "Toggle Results",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "btn-recenter",
+      "name": "Recenter Workspace Button",
+      "content": {
+        "type": "asset",
+        "asset": "btn-recenter"
+      },
+      "transform": {
+        "position": [0.45, 0.93, -0.56]
+      },
+      "components": {
+        "SpatialActionButtonComponent": {
+          "action": "recenter_workspace",
+          "label": "Recenter Workspace",
+          "cooldownMs": 350,
+          "baseY": 0.93
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "results-inspector-panel",
+      "name": "Results Inspector Panel",
+      "content": {
+        "type": "asset",
+        "asset": "results-inspector-panel"
+      },
+      "transform": {
+        "position": [0.68, 1.24, -0.82],
+        "rotationDeg": [0, -24, 0]
+      },
+      "components": {
+        "ResultsPanelComponent": {
+          "panelId": "results-inspector-panel",
+          "isOpen": true,
+          "baseY": 1.24
+        },
+        "RayInteractable": {},
+        "PokeInteractable": {}
       }
     },
     {
@@ -207,14 +436,15 @@
         "asset": "companion-drone"
       },
       "transform": {
-        "position": [0.68, 1.38, -0.72]
+        "position": [0.68, 1.52, -0.72]
       },
       "components": {
         "CompanionDroneComponent": {
-          "baseY": 1.38,
+          "baseY": 1.52,
           "mood": "ready"
         },
         "RayInteractable": {},
+        "PokeInteractable": {},
         "DistanceGrabbable": {
           "movementMode": "MoveFromTarget"
         }

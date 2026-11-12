@@ -19,6 +19,7 @@
 import {
   Color,
   createSystem,
+  Grabbed,
   Hovered,
   Mesh,
   MeshBasicMaterial,
@@ -172,9 +173,11 @@ export class AgentNodeSystem extends createSystem({
         time,
       );
 
-      // Floating vertical motion (unless actively grabbed, still smooth around baseY)
-      transform.position.y =
-        baseY + Math.sin(time * metrics.bobFrequency) * metrics.bobAmplitude;
+      // Floating vertical motion (paused while actively Grabbed so hand translation is 1:1)
+      if (!entity.hasComponent(Grabbed)) {
+        transform.position.y =
+          baseY + Math.sin(time * metrics.bobFrequency) * metrics.bobAmplitude;
+      }
 
       // Smooth uniform scale interpolation for Hovered / Selected / Running states
       const currentScale = transform.scale.x;
@@ -276,9 +279,11 @@ export class AgentNodeSystem extends createSystem({
 
       const moodSpeed = mood === 'active' ? 2.8 : hovered ? 1.8 : 1.0;
 
-      // Gentle figure-8 / hover bob
-      transform.position.y = baseY + Math.sin(time * 3.0) * 0.03;
-      transform.rotation.y = Math.sin(time * 1.1) * 0.25;
+      // Gentle figure-8 / hover bob (paused while actively Grabbed)
+      if (!entity.hasComponent(Grabbed)) {
+        transform.position.y = baseY + Math.sin(time * 3.0) * 0.03;
+        transform.rotation.y = Math.sin(time * 1.1) * 0.25;
+      }
 
       const halo = transform.getObjectByName('companion-halo-ring');
       if (halo) {

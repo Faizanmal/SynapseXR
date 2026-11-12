@@ -1,6 +1,8 @@
 /**
  * AgentSphere shared runtime and editor asset catalog.
- * Registers procedural command center architecture and the 4 holographic agent archetypes.
+ * Registers procedural command center architecture, the 4 holographic agent archetypes,
+ * the binary GLB companion drone, tactile 3D spatial buttons, workflow connection beams,
+ * and the holographic results inspector console.
  */
 
 import { AssetType, defineAssets } from '@iwsdk/core';
@@ -12,14 +14,22 @@ import {
   createReviewerAgent,
 } from './scene-assets/agents.scene-asset.js';
 import {
+  createApproveButton,
+  createCancelRunButton,
   createChamberArchitecture,
   createCommandConsoleDesk,
   createCommandFloor,
   createCommandPlatform,
   createExecutorPedestal,
   createPlannerPedestal,
+  createRecenterButton,
+  createRejectButton,
   createResearcherPedestal,
+  createResultsInspectorPanel,
   createReviewerPedestal,
+  createStartRunButton,
+  createToggleResultsButton,
+  createWorkflowConnectionBeam,
 } from './scene-assets/command-center.scene-asset.js';
 
 const publicAssetUrl = (filePath: string): string =>
@@ -60,6 +70,16 @@ export default defineAssets({
   // Optional AI Companion Drone (GLB + Procedural Fallback)
   'companion-drone': gltf('companion-drone.glb', 'AI Companion Drone'),
   'companion-fallback': createCompanionFallback(),
+
+  // Phase 6: 3D Tactile Spatial Buttons, Connection Beams & Inspector Console
+  'btn-start-run': createStartRunButton(),
+  'btn-cancel-run': createCancelRunButton(),
+  'btn-approve': createApproveButton(),
+  'btn-reject': createRejectButton(),
+  'btn-toggle-results': createToggleResultsButton(),
+  'btn-recenter': createRecenterButton(),
+  'workflow-connection-beam': createWorkflowConnectionBeam(),
+  'results-inspector-panel': createResultsInspectorPanel(),
 
   // UI Panels
   'welcome-panel': uikitml('welcome.uikitml', 'Welcome Panel'),

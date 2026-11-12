@@ -11,6 +11,7 @@
  */
 
 import {
+  BoxGeometry,
   createScenePrimitiveObject,
   CylinderGeometry,
   DodecahedronGeometry,
@@ -20,6 +21,7 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
   OctahedronGeometry,
+  SphereGeometry,
   TorusGeometry,
 } from '@iwsdk/core';
 
@@ -38,6 +40,36 @@ function createStatusBeaconRing(initialColor: string): Mesh {
   beacon.position.y = -0.11;
   beacon.name = 'status-beacon-ring';
   return beacon;
+}
+
+/**
+ * Attaches large, ergonomic spatial graph ports (port-in, port-out) and an
+ * elevated overhead label badge (y = +0.16m) so connection lines never obscure labels.
+ */
+function attachGraphPortsAndBadge(root: Group, accentColor: string): void {
+  const portIn = new Mesh(
+    new SphereGeometry(0.024, 12, 12),
+    new MeshBasicMaterial({ color: '#80ffdb' }),
+  );
+  portIn.position.set(-0.145, -0.02, 0);
+  portIn.name = 'port-in';
+  root.add(portIn);
+
+  const portOut = new Mesh(
+    new SphereGeometry(0.024, 12, 12),
+    new MeshBasicMaterial({ color: accentColor }),
+  );
+  portOut.position.set(0.145, -0.02, 0);
+  portOut.name = 'port-out';
+  root.add(portOut);
+
+  const labelBadge = new Mesh(
+    new BoxGeometry(0.16, 0.028, 0.012),
+    new MeshBasicMaterial({ color: accentColor }),
+  );
+  labelBadge.position.set(0, 0.16, 0);
+  labelBadge.name = 'node-label-badge';
+  root.add(labelBadge);
 }
 
 /**
@@ -82,6 +114,7 @@ export function createPlannerAgent(): Group {
   root.add(ring2);
 
   root.add(createStatusBeaconRing('#00e5ff'));
+  attachGraphPortsAndBadge(root, '#00e5ff');
   return root;
 }
 
@@ -139,6 +172,7 @@ export function createResearcherAgent(): Group {
   root.add(sat3);
 
   root.add(createStatusBeaconRing('#bd00ff'));
+  attachGraphPortsAndBadge(root, '#bd00ff');
   return root;
 }
 
@@ -175,6 +209,7 @@ export function createExecutorAgent(): Group {
   root.add(coil);
 
   root.add(createStatusBeaconRing('#ff9100'));
+  attachGraphPortsAndBadge(root, '#ff9100');
   return root;
 }
 
@@ -223,6 +258,7 @@ export function createReviewerAgent(): Group {
   root.add(shield);
 
   root.add(createStatusBeaconRing('#00e676'));
+  attachGraphPortsAndBadge(root, '#00e676');
   return root;
 }
 

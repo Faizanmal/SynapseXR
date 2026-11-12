@@ -13,14 +13,23 @@ import {
   type WorkflowNode,
   type WorkflowRun,
 } from './domain-types.js';
-import { validateWorkflowGraph, type GraphValidationResult } from './graph-validator.js';
+import {
+  computeTopologicalExecutionOrder,
+  validateWorkflowGraph,
+  type GraphValidationResult,
+} from './graph-validator.js';
 import { SEED_SAAS_LAUNCH_WORKFLOW } from './seed-workflow.js';
 import { workflowStorage, type StorageAdapter } from './storage.js';
+import {
+  templateSelector,
+  type WorkflowTemplateId,
+} from './template-selector.js';
 
 export type WorkflowStoreListener = (workflow: Readonly<Workflow>) => void;
 
 export class WorkflowStore {
   private currentWorkflow: Workflow;
+  private results = new Map<string, AgentResult>();
   private undoStack: Workflow[] = [];
   private redoStack: Workflow[] = [];
   private maxHistorySize = 30;
@@ -116,20 +125,146 @@ export class WorkflowStore {
     this.notify();
   }
 
-  addNode(role: AgentRole, label: string, position: [number, number, number], config: Record<string, unknown> = {}): WorkflowNode {
+  addNode(
+    role: AgentRole,
+    label: string,
+    position: [number, number, number],
+    config: Record<string, unknown> = {},
+  ): WorkflowNode {
     this.saveHistorySnapshot();
-    const id = `node-${role}-${Date.now().toString(36)}`;
+    const safePos = this.findNonOverlappingPosition(position);
+    const id = `node-${role}-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 5)}`;
     const newNode: WorkflowNode = {
       id,
       role,
-      label,
-      position,
+      label: label.trim() || `${role.toUpperCase()} Agent`,
+      position: safePos,
       configuration: config,
       status: 'ready',
     };
     this.currentWorkflow.nodes.push(newNode);
     this.notify();
     return newNode;
+  }
+
+  renameNode(nodeId: string, newLabel: string): boolean {
+    const trimmed = newLabel.trim();
+    if (!trimmed) return false;
+    const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
+    if (!node) return false;
+
+    this.saveHistorySnapshot();
+    node.label = trimmed;
+    this.notify();
+    return true;
+  }
+
+  updateNodeConfig(
+    nodeId: string,
+    configUpdate: Record<string, unknown>,
+  ): boolean {
+    const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
+    if (!node) return false;
+
+    this.saveHistorySnapshot();
+    node.configuration = {
+      ...node.configuration,
+      ...configUpdate,
+    };
+    this.notify();
+    return true;
+  }
+
+  private findNonOverlappingPosition(
+    desired: [number, number, number],
+    minDistance = 0.2,
+    excludeNodeId?: string,
+  ): [number, number, number] {
+    const candidate: [number, number, number] = [...desired];
+    let attempts = 0;
+    while (attempts < 12) {
+      const collision = this.currentWorkflow.nodes.find((n) => {
+        if (n.id === excludeNodeId) return false;
+        const dx = n.position[0] - candidate[0];
+        const dy = n.position[1] - candidate[1];
+        const dz = n.position[2] - candidate[2];
+        return Math.hypot(dx, dy, dz) < minDistance;
+      });
+      if (!collision) break;
+      // Offset along X/Y within seated workspace envelope
+      const step = (attempts + 1) * 0.11 * (attempts % 2 === 0 ? 1 : -1);
+      candidate[0] = Math.max(-0.95, Math.min(0.95, desired[0] + step));
+      candidate[1] = Math.max(
+        0.95,
+        Math.min(1.52, desired[1] + ((attempts % 3) - 1) * 0.06),
+      );
+      attempts++;
+    }
+    return [
+      Math.round(candidate[0] * 1000) / 1000,
+      Math.round(candidate[1] * 1000) / 1000,
+      Math.round(candidate[2] * 1000) / 1000,
+    ];
+  }
+
+  resolveOverlappingNodes(minDistance = 0.2): number {
+    let adjusted = 0;
+    for (const node of this.currentWorkflow.nodes) {
+      const safe = this.findNonOverlappingPosition(
+        node.position,
+        minDistance,
+        node.id,
+      );
+      if (
+        safe[0] !== node.position[0] ||
+        safe[1] !== node.position[1] ||
+        safe[2] !== node.position[2]
+      ) {
+        node.position = safe;
+        adjusted++;
+      }
+    }
+    if (adjusted > 0) {
+      this.notify();
+    }
+    return adjusted;
+  }
+
+  autoLayout(): Workflow {
+    const count = this.currentWorkflow.nodes.length;
+    if (count === 0) return this.currentWorkflow;
+
+    this.saveHistorySnapshot();
+    const topo = computeTopologicalExecutionOrder(this.currentWorkflow);
+    const orderedIds =
+      topo.executionOrder.length === count
+        ? topo.executionOrder
+        : this.currentWorkflow.nodes.map((n) => n.id);
+
+    orderedIds.forEach((nodeId, idx) => {
+      const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
+      if (!node) return;
+      const t = count === 1 ? 0.5 : idx / (count - 1);
+      // Seated ergonomic semicircle in front of the operator
+      const angle = (t - 0.5) * 1.15; // radians (-0.575 to +0.575)
+      const radius = 0.88;
+      const x = Math.round(Math.sin(angle) * radius * 1000) / 1000;
+      const z = Math.round(-Math.cos(angle) * radius * 1000) / 1000;
+      const y =
+        Math.round((1.15 + Math.cos((t - 0.5) * Math.PI) * 0.1) * 1000) / 1000;
+      node.position = [x, y, z];
+    });
+
+    this.notify();
+    return this.currentWorkflow;
+  }
+
+  loadTemplate(templateId: WorkflowTemplateId): Workflow {
+    this.saveHistorySnapshot();
+    this.currentWorkflow = templateSelector.instantiateTemplate(templateId);
+    this.results.clear();
+    this.notify();
+    return this.currentWorkflow;
   }
 
   removeNode(nodeId: string): boolean {
@@ -212,6 +347,21 @@ export class WorkflowStore {
     return changed;
   }
 
+  removeEdge(edgeId: string): boolean {
+    const beforeCount = this.currentWorkflow.edges.length;
+    this.saveHistorySnapshot();
+    this.currentWorkflow.edges = this.currentWorkflow.edges.filter(
+      (e) => e.id !== edgeId,
+    );
+    const changed = this.currentWorkflow.edges.length !== beforeCount;
+    if (changed) {
+      this.notify();
+    } else {
+      this.undoStack.pop();
+    }
+    return changed;
+  }
+
   updateNodeStatus(nodeId: string, status: AgentStatus): boolean {
     const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
     if (!node) return false;
@@ -238,7 +388,41 @@ export class WorkflowStore {
   resetToSeed(): void {
     this.saveHistorySnapshot();
     this.currentWorkflow = JSON.parse(JSON.stringify(SEED_SAAS_LAUNCH_WORKFLOW));
+    this.results.clear();
     this.notify();
+  }
+
+  resetWorkflow(): void {
+    this.resetToSeed();
+  }
+
+  saveExecutionResult(result: AgentResult): void {
+    this.results.set(result.id, result);
+    const node = this.currentWorkflow.nodes.find((n) => n.id === result.nodeId);
+    if (node) {
+      node.outputReference = result.id;
+      this.notify();
+    }
+  }
+
+  getExecutionResult(resultId: string): AgentResult | undefined {
+    return this.results.get(resultId);
+  }
+
+  approveResult(nodeId: string): boolean {
+    const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
+    if (!node) return false;
+    node.status = 'completed';
+    this.notify();
+    return true;
+  }
+
+  rejectResult(nodeId: string, _reason?: string): boolean {
+    const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
+    if (!node) return false;
+    node.status = 'failed';
+    this.notify();
+    return true;
   }
 
   validate(): GraphValidationResult {
@@ -256,6 +440,20 @@ export class WorkflowStore {
 
     this.saveHistorySnapshot();
     this.currentWorkflow = loaded;
+    this.notify();
+    return true;
+  }
+
+  async restoreLatestFromStorage(): Promise<boolean> {
+    const all = await this.storage.listWorkflows();
+    if (all.length === 0) return false;
+    const sorted = [...all].sort((a, b) =>
+      b.updatedAt.localeCompare(a.updatedAt),
+    );
+    const latest = sorted[0];
+    if (!latest) return false;
+    this.saveHistorySnapshot();
+    this.currentWorkflow = JSON.parse(JSON.stringify(latest));
     this.notify();
     return true;
   }
