@@ -15,7 +15,7 @@ async def get_capabilities(settings: Settings = Depends(get_settings)):
     """Return available models, active providers, and feature configuration."""
     provider_info = get_provider_capabilities(settings)
     return {
-        "service": "AgentSphere AI Orchestration Engine",
+        "service": "SynapseXR AI Swarm Engine",
         "version": "1.0",
         "environment": settings.environment,
         "activeProvider": provider_info["activeProvider"],

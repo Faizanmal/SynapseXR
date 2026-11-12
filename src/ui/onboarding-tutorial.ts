@@ -26,7 +26,7 @@ export class OnboardingTutorial {
     {
       id: 'step-welcome',
       stepNumber: 1,
-      title: 'Welcome to AgentSphere',
+      title: 'Welcome to SynapseXR',
       instruction: 'You are seated in the AI Orchestration Laboratory. Point and pinch at an agent hologram to focus on it.',
       actionHint: 'Pinch index & thumb or click an Agent Core',
       completed: false,

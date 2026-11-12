@@ -25,7 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app_settings = settings or get_settings()
 
     app = FastAPI(
-        title="AgentSphere AI Orchestration Engine",
+        title="SynapseXR AI Swarm Engine",
         description="Secure multi-agent spatial workflow execution backend for Meta Quest VR.",
         version=API_VERSION,
         docs_url="/docs" if app_settings.environment != "production" else None,

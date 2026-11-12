@@ -78,7 +78,7 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
 
     // 8. Generate and verify Markdown launch report
     const exportRes = workflowToolbar.exportReport();
-    expect(exportRes.content).toContain('# AgentSphere Workflow Report: Plan a SaaS Launch');
+    expect(exportRes.content).toContain('# SynapseXR Workflow Report: Plan a SaaS Launch');
     expect(exportRes.content).toContain('14-day');
     expect(exportRes.content).toContain('Stage Execution Results');
     expect(exportRes.content).toContain('Verification & Operator Sign-off');
@@ -108,7 +108,7 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
   it('guides users through the hands-first onboarding tutorial step by step', () => {
     expect(onboardingTutorial.isTutorialActive()).toBe(true);
     const step1 = onboardingTutorial.getCurrentStep();
-    expect(step1?.title).toContain('Welcome');
+    expect(step1?.title).toContain('Welcome to SynapseXR');
 
     // Advance step 1 -> step 2
     const step2 = onboardingTutorial.advanceStep();
@@ -176,7 +176,7 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
       executionMode: 'demo',
     });
 
-    expect(report).toContain('# AgentSphere Workflow Report');
+    expect(report).toContain('# SynapseXR Workflow Report');
     expect(report).toContain('14-day launch roadmap synthesized');
     expect(report).toContain('Soft Launch');
     expect(report).toContain('Human-in-the-Loop Approval');

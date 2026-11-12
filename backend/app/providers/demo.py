@@ -50,7 +50,7 @@ class DemoProvider(BaseLLMProvider):
                 "summary": "Synthesized evidence and architectural patterns from user context and prior results.",
                 "structuredOutput": {
                     "findings": [
-                        "AgentSphere DAG architecture guarantees bounded execution and zero cyclic dependencies.",
+                        "SynapseXR DAG architecture guarantees bounded execution and zero cyclic dependencies.",
                         "Three.js procedural rendering maintains steady 72-90 FPS in Meta Quest 3 WebXR session.",
                         "Structured JSON schema enforcement prevents LLM prompt injection and payload malformation.",
                     ],
@@ -58,7 +58,7 @@ class DemoProvider(BaseLLMProvider):
                     "gapAnalysis": "External live web access disabled in demo mode; synthesized from supplied references.",
                 },
                 "evidenceReferences": [
-                    "doc://agentsphere/architecture-spec",
+                    "doc://synapsexr/architecture-spec",
                     "doc://meta-vr/iwsdk-best-practices",
                 ],
                 "warnings": [
@@ -68,12 +68,12 @@ class DemoProvider(BaseLLMProvider):
 
         elif role == "executor":
             return {
-                "summary": "Generated executable artifact and configuration specification for AgentSphere.",
+                "summary": "Generated executable artifact and configuration specification for SynapseXR.",
                 "structuredOutput": {
                     "actionType": "SYNTHESIZE_ARTIFACT",
                     "target": "src/workflows/orchestrator.ts",
                     "codeArtifact": (
-                        "// Generated AgentSphere Workflow Orchestration Module\n"
+                        "// Generated SynapseXR Workflow Orchestration Module\n"
                         "export const workflowPipeline = Object.freeze({\n"
                         "  runtime: 'IWSDK_v0.2.1',\n"
                         "  targetFramerate: 90,\n"

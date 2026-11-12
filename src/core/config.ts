@@ -3,7 +3,7 @@
  * Isolates runtime parameters, feature flags, and environment endpoints.
  */
 
-export interface AgentSphereConfig {
+export interface SynapseXRConfig {
   app: {
     name: string;
     version: string;
@@ -37,9 +37,9 @@ export interface AgentSphereConfig {
   };
 }
 
-export const config: AgentSphereConfig = {
+export const config: SynapseXRConfig = {
   app: {
-    name: 'AgentSphere',
+    name: 'SynapseXR',
     version: '0.1.0',
     mode: (import.meta.env.MODE as 'development' | 'production') || 'development',
     isDemo: import.meta.env.VITE_DEMO_MODE !== 'false',

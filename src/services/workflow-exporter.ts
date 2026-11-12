@@ -20,7 +20,7 @@ export class WorkflowExporter {
     const lines: string[] = [];
 
     // Title and metadata header
-    lines.push(`# AgentSphere Workflow Report: ${workflow.title}`);
+    lines.push(`# SynapseXR Workflow Report: ${workflow.title}`);
     lines.push(`> **Generated:** ${exportedAt} | **Mode:** ${executionMode.toUpperCase()} | **Schema Version:** ${workflow.schemaVersion}`);
     lines.push('');
     lines.push(`### Mission Overview`);
@@ -96,7 +96,7 @@ export class WorkflowExporter {
     lines.push(`## Verification & Operator Sign-off`);
     lines.push(`- **Human-in-the-Loop Approval:** Verified by Spatial Operator`);
     lines.push(`- **Target Platform:** Meta Quest VR / WebXR Immersive Laboratory`);
-    lines.push(`- **Engine:** AgentSphere IWSDK Orchestrator`);
+    lines.push(`- **Engine:** SynapseXR IWSDK Orchestrator`);
     lines.push('');
 
     return lines.join('\n');

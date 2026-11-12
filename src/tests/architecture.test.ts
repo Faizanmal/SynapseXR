@@ -3,7 +3,7 @@ import { TypedEventBus } from '../core/event-bus.js';
 import { store } from '../state/store.js';
 import { AGENT_SPECS } from '../agents/agent-types.js';
 
-describe('AgentSphere Architecture & State Modules', () => {
+describe('SynapseXR Architecture & State Modules', () => {
   it('TypedEventBus registers and fires events cleanly', () => {
     const bus = new TypedEventBus<{ 'test:event': { value: number } }>();
     const handler = vi.fn();

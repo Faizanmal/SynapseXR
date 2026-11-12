@@ -44,7 +44,7 @@ export class TypedEventBus<EventMap extends object> {
 /**
  * Global application event map defining all system-wide reactive channels.
  */
-export interface AgentSphereEvents {
+export interface SynapseXREvents {
   // XR & Interaction Events
   'xr:session_start': { mode: string };
   'xr:session_end': void;
@@ -81,4 +81,4 @@ export interface AgentSphereEvents {
   'ui:toggle_inspector': { agentId: string; visible: boolean };
 }
 
-export const eventBus = new TypedEventBus<AgentSphereEvents>();
+export const eventBus = new TypedEventBus<SynapseXREvents>();
