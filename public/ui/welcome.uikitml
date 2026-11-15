@@ -6,75 +6,74 @@
 <style>
   .panel-root {
     flex-direction: column;
-    width: 420px;
+    width: 480px;
   }
 
   .panel-content {
     flex-direction: column;
-    gap: 7px;
-    padding: 22px;
+    gap: 8px;
+    padding: 24px;
   }
 
   .eyebrow {
-    color: #6b5a00;
-    font-size: 14px;
+    color: #00e5ff;
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 1.4px;
-  }
-
-  .eyebrow:dark {
-    color: #f5d90a;
+    letter-spacing: 1.5px;
   }
 
   .heading {
-    color: #1c1d20;
-    font-size: 30px;
+    color: #ffffff;
+    font-size: 26px;
     font-weight: 700;
-    line-height: 36px;
-  }
-
-  .heading:dark {
-    color: #fafaf7;
+    line-height: 32px;
   }
 
   .body {
-    color: #3a3b40;
-    font-size: 20px;
-    line-height: 27px;
+    color: #b0bec5;
+    font-size: 16px;
+    line-height: 22px;
   }
 
-  .body:dark {
-    color: #dddfe3;
+  .button-group {
+    flex-direction: row;
+    gap: 12px;
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-bottom: 24px;
   }
 
   .button {
-    justify-content: flex-start;
-    margin-left: 22px;
-    margin-right: 22px;
-    margin-bottom: 22px;
+    flex-grow: 1;
+    justify-content: center;
   }
 
   .button-label {
     transform-translate-y: 1px;
+    font-weight: 600;
   }
 </style>
 <Panel class="panel-root">
   <div class="panel-content">
-    <div class="eyebrow">IMMERSIVE WEB SDK</div>
-    <div class="heading">Hello, Immersive Web!</div>
-    <div class="body">Try each station around you,</div>
-    <div class="body">then make this scene your own.</div>
+    <div class="eyebrow">SYNAPSEXR // SPATIAL AI ORCHESTRATOR</div>
+    <div class="heading">Autonomous Agent Swarm Lab</div>
+    <div class="body">Compose, inspect, and execute multi-agent AI pipelines in immersive VR with human-in-the-loop oversight.</div>
+    <div class="body">1. Point or grab agent holographic cores to configure.</div>
+    <div class="body">2. Connect data conduits between stages.</div>
+    <div class="body">3. Launch workflow and sign off at the approval gate.</div>
   </div>
-  <Button id="xr-button" class="button">
-    <ButtonIcon>
-      <RectangleGoggles></RectangleGoggles>
-    </ButtonIcon>
-    <ButtonLabel class="button-label">Enter XR</ButtonLabel>
-  </Button>
-  <Button id="exit-button" class="button" style="display: none">
-    <ButtonIcon>
-      <LogIn></LogIn>
-    </ButtonIcon>
-    <ButtonLabel class="button-label">Exit to Browser</ButtonLabel>
-  </Button>
+  <div class="button-group">
+    <Button id="xr-button" class="button">
+      <ButtonIcon>
+        <RectangleGoggles></RectangleGoggles>
+      </ButtonIcon>
+      <ButtonLabel class="button-label">Enter XR</ButtonLabel>
+    </Button>
+    <Button id="exit-button" class="button" style="display: none">
+      <ButtonIcon>
+        <LogIn></LogIn>
+      </ButtonIcon>
+      <ButtonLabel class="button-label">Exit XR</ButtonLabel>
+    </Button>
+  </div>
 </Panel>

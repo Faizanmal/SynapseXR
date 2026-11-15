@@ -83,4 +83,5 @@ export default defineAssets({
 
   // UI Panels
   'welcome-panel': uikitml('welcome.uikitml', 'Welcome Panel'),
+  'results-inspector-ui': uikitml('results-inspector.uikitml', 'Results Inspector UI'),
 });

@@ -36,6 +36,14 @@ export class RemoteAIExecutor implements IAgentExecutor {
         abortSignal.addEventListener('abort', () => controller.abort(), { once: true });
       }
 
+      // Map frontend agent context to backend AgentExecuteRequest schema
+      const priorResults = Object.values(input.upstreamResults).map((res) => ({
+        nodeId: res.nodeId,
+        role: input.role, // role for reference
+        summary: res.summary,
+        structuredOutput: res.structuredOutput,
+      }));
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -44,13 +52,16 @@ export class RemoteAIExecutor implements IAgentExecutor {
         },
         body: JSON.stringify({
           runId: context.runId,
-          workflowId: context.workflowId,
           nodeId: input.nodeId,
           role: input.role,
-          label: input.nodeLabel,
           mission: input.mission,
-          configuration: input.configuration,
-          upstreamResults: input.upstreamResults,
+          context: {
+            nodeLabel: input.nodeLabel,
+            workflowId: context.workflowId,
+            configuration: input.configuration,
+          },
+          priorResults,
+          userProvidedEvidence: [],
         }),
         signal: controller.signal,
       });

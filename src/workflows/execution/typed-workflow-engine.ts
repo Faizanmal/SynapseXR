@@ -97,6 +97,10 @@ export class TypedWorkflowEngine {
     return this.state;
   }
 
+  getExecutionMode(): WorkflowEngineConfig['mode'] {
+    return this.config.mode;
+  }
+
   getCurrentRun(): Readonly<WorkflowRun> | null {
     return this.currentRun;
   }
@@ -256,32 +260,6 @@ export class TypedWorkflowEngine {
         }
       }
 
-      // Check if downstream node requires human approval before proceeding
-      const isReviewerOrRequiresSignoff =
-        node.role === 'reviewer' ||
-        Boolean(node.configuration.requireHumanSignoff);
-
-      if (isReviewerOrRequiresSignoff) {
-        this.pendingApprovalNodeId = nodeId;
-        this.currentRun!.nodeExecutions[nodeId]!.status = 'waiting_approval';
-        workflowStore.updateNodeStatus(nodeId, 'waiting_approval');
-        this.emitState(
-          'waiting_approval',
-          `Human approval required before finalizing ${node.label}`,
-          nodeId,
-          stageProgressBase + 0.1,
-        );
-
-        eventBus.emit('workflow:paused_for_approval', {
-          agentId: `agent-${node.role}`,
-          actionSummary: node.label,
-          proposal: 'Governance & Action proposal awaiting operator sign-off in 3D Command Center.',
-        });
-
-        // Wait asynchronously until operator approves, rejects, or cancels
-        await this.waitForApprovalGate(signal);
-      }
-
       // Execute node logic via selected executor
       const executor: IAgentExecutor =
         this.config.mode === 'remote' ? this.remoteExecutor : this.demoExecutor;
@@ -314,6 +292,29 @@ export class TypedWorkflowEngine {
       // Save output reference in store and accumulator
       accumulatedResults[nodeId] = result;
       workflowStore.saveExecutionResult(result);
+
+      // Present reviewer findings before asking the operator to sign off.
+      const requiresHumanSignoff =
+        node.role === 'reviewer' || Boolean(node.configuration.requireHumanSignoff);
+      if (requiresHumanSignoff) {
+        this.pendingApprovalNodeId = nodeId;
+        this.currentRun!.nodeExecutions[nodeId]!.status = 'waiting_approval';
+        workflowStore.updateNodeStatus(nodeId, 'waiting_approval');
+        this.emitState(
+          'waiting_approval',
+          `Review ready. Human sign-off required for ${node.label}`,
+          nodeId,
+          stageProgressBase + 0.85 / totalNodes,
+        );
+
+        eventBus.emit('workflow:paused_for_approval', {
+          agentId: `agent-${node.role}`,
+          actionSummary: node.label,
+          proposal: result.summary,
+        });
+
+        await this.waitForApprovalGate(signal);
+      }
 
       this.currentRun!.nodeExecutions[nodeId]!.status = 'completed';
       this.currentRun!.nodeExecutions[nodeId]!.completedAt = new Date().toISOString();
@@ -356,6 +357,7 @@ export class TypedWorkflowEngine {
     this.approvalResolver = null;
     this.approvalRejecter = null;
     this.pendingApprovalNodeId = null;
+    this.emitState('running', 'Human approval granted by operator. Resuming pipeline...', nodeId ?? undefined);
     resolve();
     return true;
   }

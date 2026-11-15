@@ -51,6 +51,30 @@ def _read_bool(name: str, default: bool) -> bool:
     return raw in {"1", "true", "yes", "on"}
 
 
+def _load_env_file() -> None:
+    """Best-effort loader for local .env files (e.g. backend/.env or root .env)."""
+    candidates = (
+        os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
+        os.path.join(os.path.dirname(__file__), "..", ".env"),
+        os.path.join(os.getcwd(), ".env"),
+        os.path.join(os.getcwd(), "backend", ".env"),
+    )
+    for path in candidates:
+        norm = os.path.normpath(path)
+        if os.path.isfile(norm):
+            try:
+                with open(norm, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            k, v = k.strip(), v.strip().strip("'\"")
+                            if k and k not in os.environ:
+                                os.environ[k] = v
+            except Exception:
+                pass
+
+
 def _read_secret(name: str) -> SecretStr | None:
     raw = os.environ.get(name, "").strip()
     return SecretStr(raw) if raw else None
@@ -125,6 +149,7 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> Settings:
+        _load_env_file()
         gemini_key = _read_secret("GEMINI_API_KEY")
         openai_key = _read_secret("OPENAI_API_KEY")
         openai_base = validate_provider_base_url(

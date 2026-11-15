@@ -7,8 +7,8 @@ import { CURRENT_WORKFLOW_SCHEMA_VERSION, type Workflow } from './domain-types.j
 export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
   schemaVersion: CURRENT_WORKFLOW_SCHEMA_VERSION,
   id: 'wf-saas-launch-14d',
-  title: 'Plan a SaaS Launch in 14 Days',
-  mission: 'Orchestrate a high-velocity 14-day go-to-market plan for an AI Developer Tool SaaS, including user acquisition, security compliance, landing page synthesis, and executive approval.',
+  title: 'AI Launch Privacy Gate',
+  mission: 'Prepare a 14-day launch for an AI meeting-notes product. The draft claims customer prompts are deleted after 30 days, but the approved retention policy is missing. Find the evidence gap, remove unsupported claims from launch copy, and pause for human sign-off before publication.',
   status: 'draft',
   createdAt: '2026-11-11T00:00:00.000Z',
   updatedAt: '2026-11-11T00:00:00.000Z',
@@ -21,7 +21,7 @@ export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
       configuration: {
         timeframeDays: 14,
         sprints: 2,
-        primaryKpi: '1,000 developer signups',
+        primaryKpi: 'Publish only claims backed by an approved source',
       },
       status: 'ready',
     },
@@ -31,8 +31,8 @@ export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
       label: 'Market & Tech Researcher',
       position: [-0.15, 1.25, -0.85],
       configuration: {
-        channels: ['ProductHunt', 'HackerNews', 'X / Dev Community'],
-        benchmarkCompetitors: ['Cursor', 'v0', 'Replit'],
+        evidenceToVerify: ['30-day prompt deletion claim'],
+        requiredOwner: 'Privacy policy owner',
       },
       status: 'idle',
     },
@@ -42,7 +42,7 @@ export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
       label: 'Launch Content Executor',
       position: [0.15, 1.25, -0.85],
       configuration: {
-        deliverables: ['Launch Day Tweet Thread', 'Show HN Post Draft', 'Product Hunt Taglines'],
+        deliverables: ['Launch copy with unsupported claim removed', 'Evidence request for policy owner'],
       },
       status: 'idle',
     },
@@ -53,7 +53,7 @@ export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
       position: [0.45, 1.15, -0.75],
       configuration: {
         requireHumanSignoff: true,
-        complianceCheck: 'SOC2 / Data Privacy',
+        complianceCheck: 'Retention claim evidence and safe publication copy',
       },
       status: 'idle',
     },

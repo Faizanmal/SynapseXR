@@ -398,6 +398,7 @@ export class WorkflowStore {
 
   saveExecutionResult(result: AgentResult): void {
     this.results.set(result.id, result);
+    void this.storage.saveResult(result);
     const node = this.currentWorkflow.nodes.find((n) => n.id === result.nodeId);
     if (node) {
       node.outputReference = result.id;
@@ -421,14 +422,27 @@ export class WorkflowStore {
     const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
     if (!node) return false;
     node.status = 'completed';
+    const result = node.outputReference ? this.results.get(node.outputReference) : undefined;
+    if (result) {
+      result.structuredOutput = { ...result.structuredOutput, operatorDecision: 'approved' };
+    }
     this.notify();
     return true;
   }
 
-  rejectResult(nodeId: string, _reason?: string): boolean {
+  rejectResult(nodeId: string, reason?: string): boolean {
     const node = this.currentWorkflow.nodes.find((n) => n.id === nodeId);
     if (!node) return false;
     node.status = 'failed';
+    const result = node.outputReference ? this.results.get(node.outputReference) : undefined;
+    if (result) {
+      result.summary = `REJECTED BY OPERATOR: ${reason || 'No reason provided.'} ${result.summary}`;
+      result.structuredOutput = {
+        ...result.structuredOutput,
+        operatorDecision: 'rejected',
+        rejectionReason: reason || 'No reason provided.',
+      };
+    }
     this.notify();
     return true;
   }
@@ -448,6 +462,17 @@ export class WorkflowStore {
 
     this.saveHistorySnapshot();
     this.currentWorkflow = loaded;
+
+    // Restore results for loaded workflow nodes
+    for (const node of loaded.nodes) {
+      if (node.outputReference) {
+        const res = await this.storage.getResult(node.outputReference);
+        if (res) {
+          this.results.set(res.id, res);
+        }
+      }
+    }
+
     this.notify();
     return true;
   }
@@ -462,6 +487,17 @@ export class WorkflowStore {
     if (!latest) return false;
     this.saveHistorySnapshot();
     this.currentWorkflow = JSON.parse(JSON.stringify(latest));
+
+    // Restore results for latest workflow nodes
+    for (const node of this.currentWorkflow.nodes) {
+      if (node.outputReference) {
+        const res = await this.storage.getResult(node.outputReference);
+        if (res) {
+          this.results.set(res.id, res);
+        }
+      }
+    }
+
     this.notify();
     return true;
   }

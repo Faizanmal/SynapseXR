@@ -11,6 +11,7 @@
 
 import {
   BoxGeometry,
+  CanvasTexture,
   ConeGeometry,
   createSceneMaterial,
   createScenePrimitiveObject,
@@ -20,6 +21,7 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
   OctahedronGeometry,
+  PlaneGeometry,
   RingGeometry,
   SphereGeometry,
   TorusGeometry,
@@ -322,7 +324,7 @@ export function createChamberArchitecture(): Group {
  * Large, accessible 3D tactile spatial button for hands-first poke and ray interaction.
  * Target footprint: 12cm wide x 4.5cm tall x 9cm deep.
  */
-export function createSpatialActionButton(accentColor: string): Group {
+export function createSpatialActionButton(accentColor: string, buttonLabel?: string): Group {
   const root = new Group();
   root.name = 'SpatialActionButtonRoot';
 
@@ -341,31 +343,61 @@ export function createSpatialActionButton(accentColor: string): Group {
   cap.name = 'button-cap';
   root.add(cap);
 
+  if (buttonLabel && typeof document !== 'undefined') {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = accentColor;
+        ctx.fillRect(0, 0, 256, 128);
+        ctx.fillStyle = '#0a0d14';
+        ctx.font = 'bold 36px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(buttonLabel, 128, 64);
+
+        const tex = new CanvasTexture(canvas);
+        const labelMesh = new Mesh(
+          new PlaneGeometry(0.088, 0.044),
+          new MeshBasicMaterial({ map: tex, transparent: true }),
+        );
+        labelMesh.rotation.x = -Math.PI / 2;
+        labelMesh.position.y = 0.03;
+        labelMesh.name = 'button-label-plate';
+        root.add(labelMesh);
+      }
+    } catch {
+      // Fallback in headless environment without DOM canvas
+    }
+  }
+
   return root;
 }
 
 export function createStartRunButton(): Group {
-  return createSpatialActionButton('#00e5ff'); // Cyan
+  return createSpatialActionButton('#00e5ff', 'START'); // Cyan
 }
 
 export function createCancelRunButton(): Group {
-  return createSpatialActionButton('#ff9100'); // Amber
+  return createSpatialActionButton('#ff9100', 'CANCEL'); // Amber
 }
 
 export function createApproveButton(): Group {
-  return createSpatialActionButton('#00e676'); // Emerald
+  return createSpatialActionButton('#00e676', 'APPROVE'); // Emerald
 }
 
 export function createRejectButton(): Group {
-  return createSpatialActionButton('#ff1744'); // Crimson
+  return createSpatialActionButton('#ff1744', 'REJECT'); // Crimson
 }
 
 export function createToggleResultsButton(): Group {
-  return createSpatialActionButton('#bd00ff'); // Violet
+  return createSpatialActionButton('#bd00ff', 'RESULTS'); // Violet
 }
 
 export function createRecenterButton(): Group {
-  return createSpatialActionButton('#ffd600'); // Gold
+  return createSpatialActionButton('#ffd600', 'CENTER'); // Gold
 }
 
 /**

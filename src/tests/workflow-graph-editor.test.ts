@@ -39,7 +39,7 @@ describe('Phase 7: Spatial Workflow Graph Editor', () => {
   it('provides the 3 required workflow templates (SaaS Launch, Project Risk Review, Product Idea Evaluation)', () => {
     const templates = templateSelector.listTemplates();
     expect(templates.map((t) => t.name)).toEqual([
-      'SaaS Launch Planner',
+      'AI Launch Privacy Gate',
       'Project Risk Review',
       'Product Idea Evaluation',
     ]);

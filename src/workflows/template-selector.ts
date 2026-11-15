@@ -1,7 +1,7 @@
 /**
  * TemplateSelector: Catalog and instantiation service for predefined 3D spatial
  * AI agent workflows:
- * 1. SaaS Launch Planner ("Plan a SaaS Launch in 14 Days")
+ * 1. AI Launch Privacy Gate (14-day launch readiness with human sign-off)
  * 2. Project Risk Review ("Autonomous Technical & Compliance Risk Audit")
  * 3. Product Idea Evaluation ("Spatial Product Discovery & Feasibility Matrix")
  */
@@ -191,8 +191,8 @@ function cloneWorkflowWithErgonomicPositions(wf: Workflow): Workflow {
 export const WORKFLOW_TEMPLATES: ReadonlyArray<WorkflowTemplateDescriptor> = [
   {
     id: 'saas-launch-planner',
-    name: 'SaaS Launch Planner',
-    subtitle: '14-Day Go-To-Market Pipeline',
+    name: 'AI Launch Privacy Gate',
+    subtitle: '14-Day Launch Readiness + Human Review',
     missionSummary: SEED_SAAS_LAUNCH_WORKFLOW.mission,
     createWorkflow: () =>
       cloneWorkflowWithErgonomicPositions(SEED_SAAS_LAUNCH_WORKFLOW),

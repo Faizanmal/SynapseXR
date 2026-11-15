@@ -12,7 +12,7 @@ import {
   executeSpatialAction,
   resolveWorkflowNodeId,
 } from '../../interactions/spatial-input-adapter.js';
-import { workflowExporter } from '../../services/workflow-exporter.js';
+import { inferExecutionMode, workflowExporter } from '../../services/workflow-exporter.js';
 import type {
   AgentResult,
   AgentRole,
@@ -28,6 +28,7 @@ import {
   templateSelector,
   type WorkflowTemplateId,
 } from '../template-selector.js';
+import { typedWorkflowEngine } from '../execution/typed-workflow-engine.js';
 import { workflowStore } from '../workflow-store.js';
 
 export class WorkflowToolbar {
@@ -193,7 +194,7 @@ export class WorkflowToolbar {
       workflow: wf,
       results: allResults,
       exportedAt: new Date().toISOString(),
-      executionMode: 'demo',
+      executionMode: inferExecutionMode(allResults, typedWorkflowEngine.getExecutionMode()),
     });
     const filename = `agentsphere-launch-report-${Date.now().toString(36)}.md`;
     const downloaded = workflowExporter.downloadMarkdownFile(filename, md);

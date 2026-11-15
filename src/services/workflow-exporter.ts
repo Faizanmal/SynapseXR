@@ -11,7 +11,17 @@ export interface WorkflowExportData {
   workflow: Workflow;
   results: Record<string, AgentResult>;
   exportedAt: string;
-  executionMode: 'live' | 'demo';
+  executionMode: 'live' | 'demo' | 'hybrid';
+}
+
+export function inferExecutionMode(
+  results: Record<string, AgentResult>,
+  fallbackMode: 'live' | 'demo' | 'remote',
+): WorkflowExportData['executionMode'] {
+  const modes = new Set(Object.values(results).map((result) => result.executionMode));
+  if (modes.size === 0) return fallbackMode === 'remote' ? 'live' : fallbackMode;
+  if (modes.size > 1) return 'hybrid';
+  return modes.has('mock') ? 'demo' : 'live';
 }
 
 export class WorkflowExporter {
@@ -21,7 +31,12 @@ export class WorkflowExporter {
 
     // Title and metadata header
     lines.push(`# SynapseXR Workflow Report: ${workflow.title}`);
-    lines.push(`> **Generated:** ${exportedAt} | **Mode:** ${executionMode.toUpperCase()} | **Schema Version:** ${workflow.schemaVersion}`);
+    const modeLabel = executionMode === 'demo'
+      ? 'SCRIPTED DEMO'
+      : executionMode === 'hybrid'
+        ? 'MIXED LIVE AND DEMO'
+        : 'LIVE MODEL';
+    lines.push(`> **Generated:** ${exportedAt} | **Mode:** ${modeLabel} | **Schema Version:** ${workflow.schemaVersion}`);
     lines.push('');
     lines.push(`### Mission Overview`);
     lines.push(`${workflow.mission}`);
@@ -59,7 +74,7 @@ export class WorkflowExporter {
       lines.push(`- **Status:** \`${node.status}\``);
 
       if (result) {
-        lines.push(`- **Execution Mode:** \`${result.executionMode}\``);
+        lines.push(`- **Execution Mode:** \`${result.executionMode === 'mock' ? 'scripted demo output' : 'live model output'}\``);
         lines.push(`- **Execution Window:** \`${result.timestamps.startedAt}\` → \`${result.timestamps.completedAt}\``);
         lines.push('');
         lines.push(`#### Summary`);
@@ -73,7 +88,7 @@ export class WorkflowExporter {
         lines.push('');
 
         if (result.evidenceReferences && result.evidenceReferences.length > 0) {
-          lines.push(`**Evidence & Citations:**`);
+          lines.push(`**References supplied to this stage (not independently verified):**`);
           result.evidenceReferences.forEach((ref) => lines.push(`- [${ref}](${ref})`));
           lines.push('');
         }
@@ -94,8 +109,14 @@ export class WorkflowExporter {
 
     // Safety and Sign-off Verification
     lines.push(`## Verification & Operator Sign-off`);
-    lines.push(`- **Human-in-the-Loop Approval:** Verified by Spatial Operator`);
-    lines.push(`- **Target Platform:** Meta Quest VR / WebXR Immersive Laboratory`);
+    const reviewer = workflow.nodes.find((node) => node.role === 'reviewer');
+    const approvalStatus = reviewer?.status === 'completed'
+      ? 'Approved by operator'
+      : reviewer?.status === 'failed'
+        ? 'Rejected by operator'
+        : 'Pending or not recorded';
+    lines.push(`- **Human-in-the-Loop Approval:** ${approvalStatus}`);
+    lines.push(`- **Intended Platform:** Meta Quest VR / WebXR`);
     lines.push(`- **Engine:** SynapseXR IWSDK Orchestrator`);
     lines.push('');
 

@@ -4,11 +4,10 @@
  */
 
 import { GrabSystem, InputSystem, World } from '@iwsdk/core';
-import { config } from '../core/config.js';
 import { eventBus } from '../core/event-bus.js';
 import { logger } from '../core/logger.js';
 import { spatialAudioService } from '../services/spatial-audio.js';
-import { workflowExporter } from '../services/workflow-exporter.js';
+import { inferExecutionMode, workflowExporter } from '../services/workflow-exporter.js';
 import { onboardingTutorial } from '../ui/onboarding-tutorial.js';
 import { spatialUiController } from '../ui/spatial-ui-controller.js';
 import { typedWorkflowEngine } from '../workflows/execution/typed-workflow-engine.js';
@@ -211,7 +210,7 @@ export function executeSpatialAction(
         workflow: wf,
         results: allResults,
         exportedAt: new Date().toISOString(),
-        executionMode: config.app.isDemo ? 'demo' : 'live',
+        executionMode: inferExecutionMode(allResults, typedWorkflowEngine.getExecutionMode()),
       });
       const filename = `agentsphere-launch-plan-${Date.now().toString(36)}.md`;
       const downloaded = workflowExporter.downloadMarkdownFile(filename, md);

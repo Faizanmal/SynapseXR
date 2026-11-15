@@ -1,0 +1,8 @@
+# Docker Compose override for HTTPS / SSL in production
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.ssl.yml up --build -d
+services:
+  frontend:
+    command: ["nginx", "-c", "/etc/nginx/nginx.ssl.conf", "-g", "daemon off;"]
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro

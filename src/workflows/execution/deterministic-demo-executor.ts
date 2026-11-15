@@ -73,7 +73,7 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-research-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Synthesized intelligence benchmark across target ecosystem and verified zero blocker risks.`,
+          summary: `Found one launch blocker: the customer data-retention claim has no verified source.`,
           structuredOutput: {
             mode: 'DEMO MODE',
             ecosystemBenchmarks: [
@@ -82,13 +82,13 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
               { tool: 'FastAPI AI Backend Service', status: 'Standby / Verified Spec' },
             ],
             prioritizedInsights: [
-              'Seated ergonomic interactions require keeping interactive nodes within 1.45m reach',
-              'High-frequency state transitions must bypass per-frame allocations to preserve 72fps',
+              'The draft claims customer prompts are deleted after 30 days, but no retention policy was supplied.',
+              'Do not publish the retention claim until the owner provides a verifiable policy source.',
             ],
             analyzedPlanReference: planResult?.id ?? 'implicit',
           },
-          evidenceReferences: ['https://iwsdk.dev/guides', 'Meta Horizon Developer Guidelines 2026'],
-          warnings: [],
+          evidenceReferences: [],
+          warnings: ['Demo scenario only: no external sources were searched or verified.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };
@@ -98,15 +98,17 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-exec-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Synthesized production launch runbook, spatial UI wireframe, and executive deliverables.`,
+          summary: `Prepared a safe launch draft with the unsupported 30-day deletion claim removed.`,
           structuredOutput: {
             mode: 'DEMO MODE',
             deliverables: [
-              { name: 'Launch Day Spatial Announcement Thread', ready: true },
-              { name: 'Horizon Developer Competition Submission Dossier', ready: true },
-              { name: 'FastAPI AI Proxy Integration Runbook', ready: true },
+              { name: 'Launch announcement with no unsupported privacy claims', ready: true },
+              { name: 'Open evidence request for the retention policy owner', ready: true },
+              { name: 'Pre-publication review checklist', ready: true },
             ],
-            proposedAction: 'Authorize public release and production deployment in Horizon Store catalog.',
+            proposedAction: 'Approve publication of the draft with the unsupported retention claim removed.',
+            blockedClaim: 'Customer prompts are deleted after 30 days.',
+            missingEvidence: 'A verifiable, owner-approved retention policy.',
             requiresHumanApproval: true,
           },
           evidenceReferences: ['src/index.ts', 'public/scenes/main.iwsdk.scene.json'],
@@ -124,21 +126,21 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-review-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Completed rigorous quality, security, and compliance verification. Proposed action is sound.`,
+          summary: `SAFE DRAFT READY: the 30-day deletion claim is unsupported and has been removed. Approve this draft or reject it and request policy evidence.`,
           structuredOutput: {
             mode: 'DEMO MODE',
-            complianceGrade: 'A+',
+            complianceGrade: 'HOLD',
             checks: [
-              { check: 'Arbitrary Code Execution Prevention', passed: true },
-              { check: 'Zero Unapproved Tool Actions', passed: true },
-              { check: 'Seated Reachability & Ergonomic Accessibility', passed: true },
-              { check: 'Memory & GPU Draw Call Ceilings', passed: true },
+              { check: 'Retention claim has an approved source', passed: false },
+              { check: 'Unsupported claim excluded from draft', passed: true },
+              { check: 'Publication waits for human sign-off', passed: true },
             ],
-            recommendation: 'APPROVE',
+            recommendation: 'APPROVE SAFE DRAFT',
+            requiredEvidence: 'Owner-approved data-retention policy',
             targetProposal: execResult?.structuredOutput?.proposedAction ?? 'Ready for deployment.',
           },
-          evidenceReferences: ['docs/TEST_REPORT.md', 'docs/IMPLEMENTATION_STATUS.md'],
-          warnings: [],
+          evidenceReferences: [],
+          warnings: ['Demo review is scripted and does not certify real-world compliance.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };

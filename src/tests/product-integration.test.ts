@@ -35,9 +35,9 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
   });
 
   it('Scenario: "Plan a SaaS launch in 14 days" full execution & sign-off lifecycle', async () => {
-    // 1. Select SaaS Launch Planner template
+    // 1. Select AI Launch Privacy Gate template
     const wf = workflowToolbar.selectTemplate('saas-launch-planner');
-    expect(wf.title).toContain('SaaS Launch');
+    expect(wf.title).toBe('AI Launch Privacy Gate');
     expect(wf.mission).toContain('14-day');
     expect(wf.nodes).toHaveLength(4);
 
@@ -78,7 +78,7 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
 
     // 8. Generate and verify Markdown launch report
     const exportRes = workflowToolbar.exportReport();
-    expect(exportRes.content).toContain('# SynapseXR Workflow Report: Plan a SaaS Launch');
+    expect(exportRes.content).toContain('# SynapseXR Workflow Report: AI Launch Privacy Gate');
     expect(exportRes.content).toContain('14-day');
     expect(exportRes.content).toContain('Stage Execution Results');
     expect(exportRes.content).toContain('Verification & Operator Sign-off');

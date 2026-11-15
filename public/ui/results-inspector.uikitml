@@ -1,0 +1,172 @@
+<!--
+  Holographic Results Inspector Panel for SynapseXR
+  Displays live workflow progress, active agent status, deliverable details, and human sign-off prompts.
+-->
+<style>
+  .inspector-root {
+    flex-direction: column;
+    width: 520px;
+  }
+
+  .inspector-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    padding-right: 20px;
+    padding-bottom: 16px;
+    padding-left: 20px;
+    border-width: 1px;
+    border-color: #1e293b;
+  }
+
+  .title-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .app-tag {
+    color: #00e5ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+
+  .mission-title {
+    color: #f8fafc;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .status-badge {
+    background-color: #0f172a;
+    border-width: 1px;
+    border-color: #00e5ff;
+    border-radius: 4px;
+    padding-top: 4px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    color: #00e5ff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .inspector-body {
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 18px;
+    padding-right: 20px;
+    padding-bottom: 18px;
+    padding-left: 20px;
+    max-height: 380px;
+  }
+
+  .section-label {
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+  }
+
+  .content-card {
+    background-color: #0b1120;
+    border-width: 1px;
+    border-color: #1e293b;
+    border-radius: 6px;
+    padding-top: 14px;
+    padding-right: 14px;
+    padding-bottom: 14px;
+    padding-left: 14px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .content-summary {
+    color: #e2e8f0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .meta-row {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .meta-item {
+    color: #64748b;
+    font-size: 11px;
+  }
+
+  .action-banner {
+    background-color: #1a1600;
+    border-width: 1px;
+    border-color: #eab308;
+    border-radius: 6px;
+    padding-top: 12px;
+    padding-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .action-text {
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .inspector-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 14px;
+    padding-right: 20px;
+    padding-bottom: 14px;
+    padding-left: 20px;
+    border-width: 1px;
+    border-color: #1e293b;
+  }
+
+  .btn-action {
+    padding-top: 6px;
+    padding-right: 14px;
+    padding-bottom: 6px;
+    padding-left: 14px;
+  }
+</style>
+<Panel class="inspector-root">
+  <div class="inspector-header">
+    <div class="title-group">
+      <div id="inspector-mode-label" class="app-tag">SCRIPTED DEMO - NO SOURCES VERIFIED</div>
+      <div id="inspector-mission-title" class="mission-title">AI Launch Privacy Gate</div>
+    </div>
+    <div id="inspector-status-badge" class="status-badge">READY</div>
+  </div>
+
+  <div class="inspector-body">
+    <div class="section-label">LATEST DELIVERABLE ARTIFACT</div>
+    <div class="content-card">
+      <div id="inspector-summary" class="content-summary">
+        Select an agent node or tap [Start Run] to execute the multi-agent pipeline. Outputs and compliance audits appear here in real time.
+      </div>
+      <div class="meta-row">
+        <div id="inspector-stage-role" class="meta-item">Role: -</div>
+        <div id="inspector-node-id" class="meta-item">Node: -</div>
+      </div>
+    </div>
+
+    <div id="inspector-approval-banner" class="action-banner">
+      <div id="inspector-action-copy" class="action-text">Reviewer findings are ready for your decision.</div>
+      <div id="inspector-action-hint" class="meta-item">Inspect the result, then approve the safe draft or reject it.</div>
+    </div>
+  </div>
+
+  <div class="inspector-footer">
+    <Button id="btn-inspector-refresh" class="btn-action">
+      <ButtonLabel>Refresh View</ButtonLabel>
+    </Button>
+  </div>
+</Panel>
+

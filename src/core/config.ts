@@ -60,7 +60,10 @@ export const config: SynapseXRConfig = {
     holographicInspector: true,
   },
   api: {
-    backendUrl: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000',
+    // In production container deployments, fallback to relative URL so Nginx reverse-proxies /api cleanly
+    backendUrl:
+      import.meta.env.VITE_BACKEND_URL ||
+      (typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'http://localhost:8000'),
     wsUrl: import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws',
     requestTimeoutMs: 30000,
   },

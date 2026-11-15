@@ -33,6 +33,7 @@
         "asset": "command-floor"
       },
       "components": {
+        "LocomotionEnvironment": {},
         "DomeFade": {
           "start": 6,
           "end": 14
@@ -426,6 +427,22 @@
         },
         "RayInteractable": {},
         "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "results-inspector-ui",
+      "name": "Results Inspector UI",
+      "content": {
+        "type": "asset",
+        "asset": "results-inspector-ui"
+      },
+      "transform": {
+        "position": [0.68, 1.25, -0.80],
+        "rotationDeg": [0, -24, 0],
+        "scale": 0.42
+      },
+      "components": {
+        "RayInteractable": {}
       }
     },
     {

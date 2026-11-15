@@ -30,10 +30,18 @@ export class AiBackendService {
   }
 
   async runAgentTask(role: string, prompt: string): Promise<string> {
-    const res = await fetch(`${this.baseUrl}/api/agent/run`, {
+    const res = await fetch(`${this.baseUrl}/api/v1/agents/${role}/execute`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role, prompt }),
+      body: JSON.stringify({
+        runId: `run-${Date.now().toString(36)}`,
+        nodeId: `node-${role}-direct`,
+        role,
+        mission: prompt,
+        context: {},
+        priorResults: [],
+        userProvidedEvidence: [],
+      }),
       signal: AbortSignal.timeout(config.api.requestTimeoutMs),
     });
 
@@ -41,8 +49,8 @@ export class AiBackendService {
       throw new Error(`Agent task failed with status ${res.status}`);
     }
 
-    const data = (await res.json()) as { output: string };
-    return data.output;
+    const data = (await res.json()) as { summary?: string; structuredOutput?: unknown };
+    return data.summary || JSON.stringify(data.structuredOutput);
   }
 }
 
