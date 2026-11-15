@@ -102,10 +102,14 @@ def parse_origins(raw: str) -> tuple[str, ...]:
             continue
         if origin == "*":
             raise ValueError("ALLOWED_ORIGINS must be an explicit allowlist; '*' is not permitted")
+        # Handle cases where double scheme is accidentally introduced via env vars
+        while origin.startswith(("https://https://", "http://https://", "https://http://")):
+            origin = origin[origin.index("://") + 3:]
+        if not origin.startswith(("http://", "https://")):
+            origin = f"https://{origin}"
         parsed = urlparse(origin)
-        if parsed.scheme not in {"http", "https"} or not parsed.hostname:
-            raise ValueError(f"Invalid origin in ALLOWED_ORIGINS: {origin!r}")
-        origins.append(origin)
+        if parsed.scheme in {"http", "https"} and parsed.hostname:
+            origins.append(origin)
     return tuple(dict.fromkeys(origins))
 
 
