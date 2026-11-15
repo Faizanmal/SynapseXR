@@ -3,11 +3,9 @@ FROM node:22-bookworm-slim AS builder
 
 WORKDIR /app
 
-# Enable production environment variables during build
-ENV NODE_ENV=production
-
 COPY package.json package-lock.json ./
-RUN npm ci
+# Install all dependencies including build tooling (vite, typescript, etc.)
+RUN npm ci --include=dev
 
 COPY . .
 RUN npm run build

@@ -11,6 +11,11 @@ dist/
 .env.local
 .env.production
 
+# Certificates & Keys
+nginx/certs/*.pem
+nginx/certs/*.key
+nginx/certs/*.crt
+
 # IDE and OS files
 .vscode/*
 !.vscode/extensions.json
