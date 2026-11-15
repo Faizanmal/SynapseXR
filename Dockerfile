@@ -17,6 +17,8 @@ FROM nginx:alpine-slim
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/nginx.ssl.conf /etc/nginx/nginx.ssl.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
+# Symlink public directory so IWSDK manifest path resolution works in production
+RUN ln -s . /usr/share/nginx/html/public
 
 EXPOSE 80 443
 
