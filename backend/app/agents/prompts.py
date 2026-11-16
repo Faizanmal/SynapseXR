@@ -3,6 +3,7 @@ System and user prompt templates for AgentSphere roles.
 Enforces strict JSON schemas, security constraints, and structured output formatting.
 """
 
+import json
 from typing import Any, Dict, List
 from ..models.schemas import AgentRole, PriorResult, EvidenceItem
 
@@ -64,9 +65,43 @@ Constraints:
 - Provide warnings (array of strings if any risks or regressions detected).
 """
 
+INCIDENT_ROLE_PROMPTS = {
+    "planner": """You are the INCIDENT COMMANDER for the SynapseXR AI retrieval incident simulation.
+Build a concise response plan from the supplied mission and context.
+Return VALID JSON ONLY with summary, structuredOutput, evidenceReferences, and warnings.
+structuredOutput must include incidentId, provisionalSeverity, knownFacts, unknowns, timeline,
+responsePhases, and successCriteria. Label severity as provisional. Do not turn assumptions
+into facts. This scenario is synthetic; no real incident or system has been confirmed.
+""",
+    "researcher": """You are the EVIDENCE ANALYST for the SynapseXR AI retrieval incident simulation.
+Correlate only evidence supplied in the mission, context, prior results, or evidence list.
+Return VALID JSON ONLY with summary, structuredOutput, evidenceReferences, and warnings.
+structuredOutput must include observations, evidenceGaps, realWorldScope, confidenceScore, and
+requiredEvidence. Use an empty evidenceReferences array when no source was supplied. Never
+invent logs, URLs, telemetry, affected tenants, or source verification. Mark unknowns explicitly.
+""",
+    "executor": """You are the CONTAINMENT PLANNER for the SynapseXR AI retrieval incident simulation.
+Prepare a staged, reversible plan; do not execute it or provide live operational commands.
+Return VALID JSON ONLY with summary, structuredOutput, evidenceReferences, and warnings.
+structuredOutput must include containmentPlan, proposedAction, impact, rollback, executionBoundary,
+and requiresHumanApproval. The proposed action must be simulation-only unless supplied context
+proves otherwise. State that no production tool was called. Never claim containment occurred.
+""",
+    "reviewer": """You are the SAFETY AND RECOVERY REVIEWER for the SynapseXR AI retrieval incident simulation.
+Review scope, evidence quality, blast radius, reversibility, and authorization boundaries.
+Return VALID JSON ONLY with summary, structuredOutput, evidenceReferences, and warnings.
+structuredOutput must include reviewStatus, checks (array of {check, passed}), recommendation,
+requiredEvidence, impact, rollbackPlan, and targetProposal. Separate readiness of a simulated
+plan from approval of a real response. Do not certify regulatory compliance or claim a real
+incident was investigated. No recommendation authorizes external changes by itself.
+""",
+}
 
-def get_system_prompt_for_role(role: AgentRole) -> str:
-    """Return strict system prompt for role."""
+
+def get_system_prompt_for_role(role: AgentRole, context: Dict[str, Any] | None = None) -> str:
+    """Return a strict role prompt, specialized for the synthetic incident workflow."""
+    if context and context.get("workflowId") == "wf-ai-incident-command":
+        return INCIDENT_ROLE_PROMPTS.get(role, INCIDENT_ROLE_PROMPTS["planner"])
     if role == "planner":
         return PLANNER_SYSTEM_PROMPT
     elif role == "researcher":
@@ -96,8 +131,21 @@ def build_user_prompt(
 
     if prior_results:
         sections.append("PRIOR STAGE RESULTS:")
+        prior_budget = 12_000
         for pr in prior_results:
-            sections.append(f"- [{pr.role.upper()} ({pr.node_id})]: {pr.summary}")
+            if prior_budget <= 0:
+                sections.append("Additional prior stage details omitted to keep the prompt bounded.")
+                break
+            payload = json.dumps(pr.structured_output, ensure_ascii=False, default=str)
+            payload_limit = min(3_000, prior_budget)
+            if len(payload) > payload_limit:
+                payload = payload[:payload_limit] + "... [truncated]"
+            section = (
+                f"- [{pr.role.upper()} ({pr.node_id})]: {pr.summary}\n"
+                f"  STRUCTURED OUTPUT: {payload}"
+            )
+            sections.append(section)
+            prior_budget -= len(payload)
 
     if evidence:
         sections.append("USER PROVIDED EVIDENCE:")

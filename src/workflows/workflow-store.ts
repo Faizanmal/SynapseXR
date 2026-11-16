@@ -18,7 +18,7 @@ import {
   validateWorkflowGraph,
   type GraphValidationResult,
 } from './graph-validator.js';
-import { SEED_SAAS_LAUNCH_WORKFLOW } from './seed-workflow.js';
+import { SEED_AI_INCIDENT_WORKFLOW } from './seed-workflow.js';
 import { workflowStorage, type StorageAdapter } from './storage.js';
 import {
   templateSelector,
@@ -40,7 +40,7 @@ export class WorkflowStore {
     this.storage = storageAdapter;
     this.currentWorkflow = initialWorkflow
       ? JSON.parse(JSON.stringify(initialWorkflow))
-      : JSON.parse(JSON.stringify(SEED_SAAS_LAUNCH_WORKFLOW));
+      : JSON.parse(JSON.stringify(SEED_AI_INCIDENT_WORKFLOW));
   }
 
   getWorkflow(): Readonly<Workflow> {
@@ -387,7 +387,7 @@ export class WorkflowStore {
 
   resetToSeed(): void {
     this.saveHistorySnapshot();
-    this.currentWorkflow = JSON.parse(JSON.stringify(SEED_SAAS_LAUNCH_WORKFLOW));
+    this.currentWorkflow = JSON.parse(JSON.stringify(SEED_AI_INCIDENT_WORKFLOW));
     this.results.clear();
     this.notify();
   }

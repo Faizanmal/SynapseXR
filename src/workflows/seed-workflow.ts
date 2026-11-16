@@ -1,14 +1,14 @@
 /**
- * Seed preset workflow definition: "Plan a SaaS launch in 14 days".
+ * Seed preset workflow for a simulated AI retrieval incident.
  */
 
 import { CURRENT_WORKFLOW_SCHEMA_VERSION, type Workflow } from './domain-types.js';
 
-export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
+export const SEED_AI_INCIDENT_WORKFLOW: Workflow = {
   schemaVersion: CURRENT_WORKFLOW_SCHEMA_VERSION,
-  id: 'wf-saas-launch-14d',
-  title: 'AI Launch Privacy Gate',
-  mission: 'Prepare a 14-day launch for an AI meeting-notes product. The draft claims customer prompts are deleted after 30 days, but the approved retention policy is missing. Find the evidence gap, remove unsupported claims from launch copy, and pause for human sign-off before publication.',
+  id: 'wf-ai-incident-command',
+  title: 'AI Incident Command',
+  mission: 'SIMULATION: A synthetic support record appeared in an AI assistant answer after retrieval from a knowledge index. Triage the event, preserve the evidence trail, propose scoped containment and rollback steps, and pause for a human decision. Do not call external systems or claim a real incident occurred.',
   status: 'draft',
   createdAt: '2026-11-11T00:00:00.000Z',
   updatedAt: '2026-11-11T00:00:00.000Z',
@@ -16,44 +16,44 @@ export const SEED_SAAS_LAUNCH_WORKFLOW: Workflow = {
     {
       id: 'node-planner',
       role: 'planner',
-      label: 'Strategic Planner',
+      label: 'Incident Commander',
       position: [-0.45, 1.15, -0.75],
       configuration: {
-        timeframeDays: 14,
-        sprints: 2,
-        primaryKpi: 'Publish only claims backed by an approved source',
+        incidentId: 'SIM-042',
+        severity: 'provisional SEV-2',
+        scope: 'synthetic retrieval index only',
       },
       status: 'ready',
     },
     {
       id: 'node-researcher',
       role: 'researcher',
-      label: 'Market & Tech Researcher',
+      label: 'Evidence Analyst',
       position: [-0.15, 1.25, -0.85],
       configuration: {
-        evidenceToVerify: ['30-day prompt deletion claim'],
-        requiredOwner: 'Privacy policy owner',
+        evidenceToVerify: ['synthetic request trace', 'retrieval document ID', 'index version'],
+        unknowns: ['whether any real customer data was exposed'],
       },
       status: 'idle',
     },
     {
       id: 'node-executor',
       role: 'executor',
-      label: 'Launch Content Executor',
+      label: 'Containment Planner',
       position: [0.15, 1.25, -0.85],
       configuration: {
-        deliverables: ['Launch copy with unsupported claim removed', 'Evidence request for policy owner'],
+        deliverables: ['scoped index quarantine plan', 'evidence preservation checklist', 'rollback plan'],
       },
       status: 'idle',
     },
     {
       id: 'node-reviewer',
       role: 'reviewer',
-      label: 'Governance & Security Auditor',
+      label: 'Safety & Recovery Reviewer',
       position: [0.45, 1.15, -0.75],
       configuration: {
         requireHumanSignoff: true,
-        complianceCheck: 'Retention claim evidence and safe publication copy',
+        complianceCheck: 'scope, evidence preservation, operator authorization, and rollback readiness',
       },
       status: 'idle',
     },

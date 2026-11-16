@@ -1,6 +1,6 @@
 /**
  * Comprehensive Integration and Polish Tests for Phase 10:
- * 1. Complete SaaS Launch Scenario ("Plan a SaaS launch in 14 days")
+ * 1. Complete synthetic AI retrieval incident and operator decision
  * 2. Onboarding tutorial step progression and restart
  * 3. Spatial audio sound cues on user actions
  * 4. Human approval gate: Approve vs Reject
@@ -34,11 +34,11 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
     });
   });
 
-  it('Scenario: "Plan a SaaS launch in 14 days" full execution & sign-off lifecycle', async () => {
-    // 1. Select AI Launch Privacy Gate template
-    const wf = workflowToolbar.selectTemplate('saas-launch-planner');
-    expect(wf.title).toBe('AI Launch Privacy Gate');
-    expect(wf.mission).toContain('14-day');
+  it('simulates an AI retrieval incident through scoped containment and operator sign-off', async () => {
+    // 1. Select the AI Incident Command template
+    const wf = workflowToolbar.selectTemplate('ai-incident-command');
+    expect(wf.title).toBe('AI Incident Command');
+    expect(wf.mission).toContain('SIMULATION');
     expect(wf.nodes).toHaveLength(4);
 
     // 2. Validate graph is ready
@@ -78,14 +78,14 @@ describe('Phase 10: Product Integration & VR Experience Polish', () => {
 
     // 8. Generate and verify Markdown launch report
     const exportRes = workflowToolbar.exportReport();
-    expect(exportRes.content).toContain('# SynapseXR Workflow Report: AI Launch Privacy Gate');
-    expect(exportRes.content).toContain('14-day');
+    expect(exportRes.content).toContain('# SynapseXR Workflow Report: AI Incident Command');
+    expect(exportRes.content).toContain('SIMULATION');
     expect(exportRes.content).toContain('Stage Execution Results');
     expect(exportRes.content).toContain('Verification & Operator Sign-off');
   });
 
   it('supports rejecting actions at the Human Approval Gate with reason logging', async () => {
-    workflowToolbar.selectTemplate('saas-launch-planner');
+    workflowToolbar.selectTemplate('ai-incident-command');
     const runPromise = typedWorkflowEngine.startExecution();
 
     let attempts = 0;

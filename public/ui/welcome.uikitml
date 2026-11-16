@@ -55,12 +55,12 @@
 </style>
 <Panel class="panel-root">
   <div class="panel-content">
-    <div class="eyebrow">SYNAPSEXR // SPATIAL AI ORCHESTRATOR</div>
-    <div class="heading">Autonomous Agent Swarm Lab</div>
-    <div class="body">Compose, inspect, and execute multi-agent AI pipelines in immersive VR with human-in-the-loop oversight.</div>
-    <div class="body">1. Point or grab agent holographic cores to configure.</div>
-    <div class="body">2. Connect data conduits between stages.</div>
-    <div class="body">3. Launch workflow and sign off at the approval gate.</div>
+    <div class="eyebrow">SYNAPSEXR // AI INCIDENT COMMAND</div>
+    <div class="heading">Contain the Retrieval Leak</div>
+    <div class="body">Run a synthetic incident through triage, evidence review, containment planning, and human sign-off.</div>
+    <div class="body">1. Inspect the incident commander and evidence analyst.</div>
+    <div class="body">2. Review a scoped quarantine plan with rollback.</div>
+    <div class="body">3. Approve or reject the simulated response. No live systems are changed.</div>
   </div>
   <div class="button-group">
     <Button id="xr-button" class="button">

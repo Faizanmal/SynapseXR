@@ -108,8 +108,8 @@ export class PanelSystem extends createSystem({}) {
           : typedWorkflowEngine.getExecutionMode() === 'demo';
         modeEl.setProperties({
           text: isScripted
-            ? 'SCRIPTED DEMO - NO SOURCES VERIFIED'
-            : 'LIVE MODEL - SOURCES NOT VERIFIED',
+            ? 'SCRIPTED INCIDENT - SYNTHETIC DATA'
+            : 'LIVE MODEL - SOURCE EVIDENCE UNVERIFIED',
         });
       }
 
@@ -128,11 +128,14 @@ export class PanelSystem extends createSystem({}) {
           ?? result.structuredOutput.missingEvidence;
         const proposedAction = result.structuredOutput.proposedAction
           ?? result.structuredOutput.targetProposal;
+        const impact = result.structuredOutput.impact;
+        const rollback = result.structuredOutput.rollbackPlan
+          ?? result.structuredOutput.rollback;
         if (actionCopyEl) actionCopyEl.setProperties({ text: result.summary });
         if (actionHintEl) {
           const hint = result.executionMode === 'mock'
-            ? `SCRIPTED SCENARIO. Missing evidence: ${String(requiredEvidence ?? 'none specified')}. Proposed: ${String(proposedAction ?? 'Review the draft before approval')}`
-            : `Model proposal: ${String(proposedAction ?? 'Review the generated output')}. Verify source material independently before approving.`;
+            ? `SIMULATION. Need before a real response: ${String(requiredEvidence ?? 'incident owner and verified telemetry')}. Plan: ${String(proposedAction ?? 'Review the proposed containment')}. Impact: ${String(impact ?? 'simulation only')}. Rollback: ${String(rollback ?? 'restore the saved test snapshot')}`
+            : `Model proposal: ${String(proposedAction ?? 'Review the generated output')}. Impact: ${String(impact ?? 'not specified')}. Rollback: ${String(rollback ?? 'not specified')}. Verify evidence independently before approving.`;
           actionHintEl.setProperties({ text: hint });
         }
       }

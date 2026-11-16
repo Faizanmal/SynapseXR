@@ -39,7 +39,7 @@ export class RemoteAIExecutor implements IAgentExecutor {
       // Map frontend agent context to backend AgentExecuteRequest schema
       const priorResults = Object.values(input.upstreamResults).map((res) => ({
         nodeId: res.nodeId,
-        role: input.role, // role for reference
+        role: input.upstreamRoles?.[res.nodeId] ?? input.role,
         summary: res.summary,
         structuredOutput: res.structuredOutput,
       }));

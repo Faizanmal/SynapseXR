@@ -11,6 +11,7 @@ export interface AgentExecutionInput {
   role: AgentRole;
   configuration: Record<string, unknown>;
   upstreamResults: Record<string, AgentResult>;
+  upstreamRoles?: Record<string, AgentRole>;
 }
 
 export interface AgentExecutionContext {

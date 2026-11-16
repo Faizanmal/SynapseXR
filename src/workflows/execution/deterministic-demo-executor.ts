@@ -1,11 +1,8 @@
 /**
  * Deterministic Demo Agent Executor.
  *
- * Produces structured, realistic domain outputs for all 4 roles:
- * - Planner: Structured roadmap, deliverables, milestones
- * - Researcher: Competitor analysis, references, evidence
- * - Executor: Concrete campaign payload, copy drafts, code scaffolds
- * - Reviewer: Quality audit, security compliance check, human sign-off proposal
+ * Produces a deterministic synthetic AI retrieval incident for all 4 roles.
+ * It never reads telemetry or calls operational systems.
  *
  * Explicitly marked DEMO MODE, zero external API dependencies, safe, deterministic.
  */
@@ -45,21 +42,28 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-plan-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Deconstructed mission into 4 strategic phases and 8 prioritized milestones.`,
+          summary: `Opened simulated incident SIM-042 and separated known facts from scope unknowns.`,
           structuredOutput: {
-            mode: 'DEMO MODE',
+            mode: 'SCRIPTED SIMULATION',
             mission: input.mission,
-            timeframe: input.configuration.timeframeDays ?? 14,
-            phases: [
-              { phase: 1, title: 'Scope Definition & Architecture Review', days: '1-3' },
-              { phase: 2, title: 'Intelligence Gathering & CVE Audit', days: '4-7' },
-              { phase: 3, title: 'Asset Generation & Launch Playbook Synthesis', days: '8-11' },
-              { phase: 4, title: 'Security Governance & Human Sign-Off Gate', days: '12-14' },
+            incidentId: 'SIM-042',
+            severity: 'provisional SEV-2 (simulation only)',
+            syntheticTimeline: [
+              { time: '09:14:02', event: 'Synthetic support query submitted to assistant' },
+              { time: '09:14:03', event: 'Retriever returned document DOC-SYN-17 from index kb-synthetic-v4' },
+              { time: '09:14:04', event: 'Assistant response included a synthetic account detail' },
             ],
-            kpis: ['Zero critical vulnerabilities', 'Verified human sign-off', 'Production deploy readiness'],
+            responsePhases: [
+              'Preserve the synthetic event trail and record hashes',
+              'Confirm the affected index and retrieval path',
+              'Prepare scoped quarantine with a tested rollback',
+              'Require operator approval before any action',
+            ],
+            knownFacts: ['Only synthetic records are present in this scenario'],
+            unknowns: ['Real-world exposure scope is unknown and was not investigated'],
           },
-          evidenceReferences: ['docs/ARCHITECTURE.md', 'docs/ENVIRONMENT_REPORT.md'],
-          warnings: [],
+          evidenceReferences: [],
+          warnings: ['All incident data is synthetic. No logs, indexes, or external systems were accessed.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };
@@ -67,28 +71,28 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
 
       case 'researcher': {
         const planResult = Object.values(input.upstreamResults).find((r) =>
-          r.structuredOutput && (r.structuredOutput as { phases?: unknown }).phases
+          r.structuredOutput && (r.structuredOutput as { responsePhases?: unknown }).responsePhases
         );
 
         return {
           id: `res-research-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Found one launch blocker: the customer data-retention claim has no verified source.`,
+          summary: `Correlated DOC-SYN-17 with the synthetic answer trace; real exposure scope remains unknown.`,
           structuredOutput: {
-            mode: 'DEMO MODE',
-            ecosystemBenchmarks: [
-              { tool: 'Meta Quest 3 WebXR', status: 'Optimal', targetFps: 72 },
-              { tool: 'IWSDK Core v1.1.0-rc.2', status: 'Compliant', zeroHeapPerFrame: true },
-              { tool: 'FastAPI AI Backend Service', status: 'Standby / Verified Spec' },
+            mode: 'SCRIPTED SIMULATION',
+            syntheticObservations: [
+              { id: 'TRACE-SYN-8841', finding: 'Retriever returned DOC-SYN-17' },
+              { id: 'DOC-SYN-17', finding: 'Document belongs to the synthetic support collection' },
+              { id: 'IDX-SYN-04', finding: 'Index version matches the scenario configuration' },
             ],
-            prioritizedInsights: [
-              'The draft claims customer prompts are deleted after 30 days, but no retention policy was supplied.',
-              'Do not publish the retention claim until the owner provides a verifiable policy source.',
+            evidenceGaps: [
+              'No production telemetry was queried; real exposure scope is unknown.',
+              'A real response would require an incident owner to confirm affected tenants and time range.',
             ],
-            analyzedPlanReference: planResult?.id ?? 'implicit',
+            analyzedTriageReference: planResult?.id ?? 'implicit',
           },
           evidenceReferences: [],
-          warnings: ['Demo scenario only: no external sources were searched or verified.'],
+          warnings: ['Synthetic trace only. These identifiers are not real telemetry or verified evidence.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };
@@ -98,21 +102,22 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-exec-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `Prepared a safe launch draft with the unsupported 30-day deletion claim removed.`,
+          summary: `Prepared a staged containment plan that preserves evidence and includes a rollback path.`,
           structuredOutput: {
-            mode: 'DEMO MODE',
-            deliverables: [
-              { name: 'Launch announcement with no unsupported privacy claims', ready: true },
-              { name: 'Open evidence request for the retention policy owner', ready: true },
-              { name: 'Pre-publication review checklist', ready: true },
+            mode: 'SCRIPTED SIMULATION',
+            containmentPlan: [
+              { step: 1, action: 'Preserve the synthetic request and retrieval events', changesProduction: false },
+              { step: 2, action: 'Quarantine kb-synthetic-v4 in the simulation', changesProduction: false },
+              { step: 3, action: 'Replay the synthetic query against a clean index snapshot', changesProduction: false },
             ],
-            proposedAction: 'Approve publication of the draft with the unsupported retention claim removed.',
-            blockedClaim: 'Customer prompts are deleted after 30 days.',
-            missingEvidence: 'A verifiable, owner-approved retention policy.',
+            proposedAction: 'Approve the simulated quarantine of kb-synthetic-v4 and preserve the event trail.',
+            rollback: 'Restore the saved synthetic index snapshot after replay passes.',
+            impact: 'The simulated assistant cannot retrieve from the quarantined test index until restored.',
+            executionBoundary: 'Plan only. No production tools or external systems are called.',
             requiresHumanApproval: true,
           },
-          evidenceReferences: ['src/index.ts', 'public/scenes/main.iwsdk.scene.json'],
-          warnings: ['Action requires explicit human-in-the-loop sign-off before downstream dispatch.'],
+          evidenceReferences: [],
+          warnings: ['This is a proposed simulation plan; no containment action has been executed.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };
@@ -126,21 +131,26 @@ export class DeterministicDemoExecutor implements IAgentExecutor {
         return {
           id: `res-review-${input.nodeId}-${Date.now().toString(36)}`,
           nodeId: input.nodeId,
-          summary: `SAFE DRAFT READY: the 30-day deletion claim is unsupported and has been removed. Approve this draft or reject it and request policy evidence.`,
+          summary: `REVIEW READY: SIM-042 containment is scoped and reversible. Confirm an incident owner before any real response.`,
           structuredOutput: {
-            mode: 'DEMO MODE',
-            complianceGrade: 'HOLD',
+            mode: 'SCRIPTED SIMULATION',
+            incidentId: 'SIM-042',
+            reviewStatus: 'READY FOR OPERATOR DECISION',
             checks: [
-              { check: 'Retention claim has an approved source', passed: false },
-              { check: 'Unsupported claim excluded from draft', passed: true },
-              { check: 'Publication waits for human sign-off', passed: true },
+              { check: 'Scenario scope is explicitly synthetic', passed: true },
+              { check: 'Evidence preservation precedes containment', passed: true },
+              { check: 'Rollback path is documented', passed: true },
+              { check: 'No external or production action was executed', passed: true },
+              { check: 'Real exposure scope is independently verified', passed: false },
             ],
-            recommendation: 'APPROVE SAFE DRAFT',
-            requiredEvidence: 'Owner-approved data-retention policy',
+            recommendation: 'APPROVE SIMULATED PLAN ONLY',
+            requiredEvidence: 'Incident owner confirmation, affected tenant/time range, and verified production telemetry before a real response.',
             targetProposal: execResult?.structuredOutput?.proposedAction ?? 'Ready for deployment.',
+            impact: execResult?.structuredOutput?.impact ?? 'No production impact; plan is simulated.',
+            rollbackPlan: execResult?.structuredOutput?.rollback ?? 'Restore the saved synthetic index snapshot.',
           },
           evidenceReferences: [],
-          warnings: ['Demo review is scripted and does not certify real-world compliance.'],
+          warnings: ['This scripted review is not incident evidence and does not authorize a production change.'],
           executionMode: 'mock',
           timestamps: { startedAt, completedAt },
         };

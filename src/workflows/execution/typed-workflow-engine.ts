@@ -253,10 +253,13 @@ export class TypedWorkflowEngine {
       // Resolve upstream results feeding into this node
       const incomingEdges = workflow.edges.filter((e) => e.targetNodeId === nodeId);
       const upstreamResultsForNode: Record<string, AgentResult> = {};
+      const upstreamRolesForNode: Record<string, WorkflowNode['role']> = {};
       for (const edge of incomingEdges) {
         const upstream = accumulatedResults[edge.sourceNodeId];
         if (upstream) {
           upstreamResultsForNode[edge.sourceNodeId] = upstream;
+          const upstreamNode = workflow.nodes.find((candidate) => candidate.id === edge.sourceNodeId);
+          if (upstreamNode) upstreamRolesForNode[edge.sourceNodeId] = upstreamNode.role;
         }
       }
 
@@ -284,6 +287,7 @@ export class TypedWorkflowEngine {
           role: node.role,
           configuration: node.configuration,
           upstreamResults: upstreamResultsForNode,
+          upstreamRoles: upstreamRolesForNode,
         },
         context,
         signal,

@@ -29,7 +29,7 @@ class AgentRunner:
     async def execute(self, req: AgentExecuteRequest) -> AgentExecuteResponse:
         started_at = datetime.now(timezone.utc).isoformat()
 
-        system_prompt = get_system_prompt_for_role(req.role)
+        system_prompt = get_system_prompt_for_role(req.role, req.context)
         user_prompt = build_user_prompt(
             role=req.role,
             mission=req.mission,

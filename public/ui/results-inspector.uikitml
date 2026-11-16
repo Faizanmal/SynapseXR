@@ -139,8 +139,8 @@
 <Panel class="inspector-root">
   <div class="inspector-header">
     <div class="title-group">
-      <div id="inspector-mode-label" class="app-tag">SCRIPTED DEMO - NO SOURCES VERIFIED</div>
-      <div id="inspector-mission-title" class="mission-title">AI Launch Privacy Gate</div>
+      <div id="inspector-mode-label" class="app-tag">SCRIPTED INCIDENT - SYNTHETIC DATA</div>
+      <div id="inspector-mission-title" class="mission-title">AI Incident Command</div>
     </div>
     <div id="inspector-status-badge" class="status-badge">READY</div>
   </div>
@@ -149,7 +149,7 @@
     <div class="section-label">LATEST DELIVERABLE ARTIFACT</div>
     <div class="content-card">
       <div id="inspector-summary" class="content-summary">
-        Select an agent node or tap [Start Run] to execute the multi-agent pipeline. Outputs and compliance audits appear here in real time.
+        Synthetic retrieval incident SIM-042 is ready. Start the workflow to triage, preserve evidence, and review containment.
       </div>
       <div class="meta-row">
         <div id="inspector-stage-role" class="meta-item">Role: -</div>
@@ -158,8 +158,8 @@
     </div>
 
     <div id="inspector-approval-banner" class="action-banner">
-      <div id="inspector-action-copy" class="action-text">Reviewer findings are ready for your decision.</div>
-      <div id="inspector-action-hint" class="meta-item">Inspect the result, then approve the safe draft or reject it.</div>
+      <div id="inspector-action-copy" class="action-text">Review the proposed containment plan.</div>
+      <div id="inspector-action-hint" class="meta-item">Approve or reject the simulation. No external system will be changed.</div>
     </div>
   </div>
 

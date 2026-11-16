@@ -1,21 +1,21 @@
-# SynapseXR: AI Launch Privacy Gate
+# SynapseXR: AI Incident Command
 
-SynapseXR is a spatial command room for reviewing AI-generated work before it is
-published. Four specialist agents pass a launch task through planning, research,
-drafting, and review. The operator can inspect the review and approve or reject
-the proposed action in the room.
+SynapseXR is a spatial incident-response room for AI retrieval leaks. Four
+specialist agents triage a synthetic event, correlate its evidence, prepare a
+scoped containment plan with rollback, and ask an operator before proceeding.
 
 ## Demo scenario
 
-The sample launch brief includes a claim that customer prompts are deleted after
-30 days, but supplies no approved retention policy. The workflow makes that gap
-visible, removes the unsupported claim from its draft, and waits for operator
-sign-off. Approval and rejection both produce a visible outcome.
+The scenario simulates a synthetic support record appearing in an assistant
+answer after retrieval from a knowledge index. The agents surface what is known,
+mark real-world scope as unknown, preserve the event trail, and propose
+quarantining only the test index. The plan includes a rollback path. Approval
+and rejection both produce a visible outcome.
 
-The default experience uses scripted demo output. It does not browse the web or
-verify external sources. The inspector labels this mode, and exported reports
-distinguish scripted output from live model output. Live model responses also
-need independent source review before they are treated as evidence.
+The default experience uses scripted simulation data. It does not read telemetry,
+browse the web, or call operational systems. The inspector labels the simulation
+and exported reports preserve that boundary. This is a response-planning demo,
+not a real incident investigation or authorization to change production.
 
 ## Try the demo
 
@@ -24,18 +24,19 @@ npm install
 npm run dev
 ```
 
-In the managed browser, enter the immersive session, start the workflow, and
-follow the four agent stages. When the reviewer pauses, read the finding and
-proposed action before using the green approve or red reject control. The result
-panel keeps the review visible after the decision.
+In the managed browser, enter the immersive session and start the workflow.
+Follow the four stages: incident commander, evidence analyst, containment
+planner, safety reviewer. At the review pause, inspect scope, evidence gaps,
+impact, and rollback. Approve or reject the simulated plan. The result panel
+shows the decision; no real action is executed.
 
 ## What to show
 
-- The four connected agent roles and the spatial workflow they form.
-- The researcher surfacing the missing retention-policy evidence.
-- The executor removing the unsupported claim from the launch draft.
-- The reviewer presenting its finding before asking for human sign-off.
-- The operator's decision appearing as approved or rejected.
+- The spatial handoff from incident triage to evidence correlation.
+- The boundary between synthetic facts and unknown real-world scope.
+- The quarantine plan, expected impact, and rollback path.
+- The reviewer pausing for operator sign-off before any action.
+- The visible approved or rejected outcome, with no production change.
 
 ## Development checks
 

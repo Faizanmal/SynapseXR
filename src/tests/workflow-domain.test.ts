@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { WorkflowStore } from '../workflows/workflow-store.js';
 import { validateWorkflowGraph } from '../workflows/graph-validator.js';
 import { LocalStorageAdapter, migrateWorkflowSchema } from '../workflows/storage.js';
-import { SEED_SAAS_LAUNCH_WORKFLOW } from '../workflows/seed-workflow.js';
+import { SEED_AI_INCIDENT_WORKFLOW } from '../workflows/seed-workflow.js';
 import type { Workflow } from '../workflows/domain-types.js';
 
 describe('Phase 3: Workflow Domain Models & State Store', () => {
@@ -15,9 +15,9 @@ describe('Phase 3: Workflow Domain Models & State Store', () => {
   });
 
   describe('1. CRUD Operations', () => {
-    it('initializes with the seed SaaS launch workflow', () => {
+    it('initializes with the seed AI incident workflow', () => {
       const wf = store.getWorkflow();
-      expect(wf.id).toBe('wf-saas-launch-14d');
+      expect(wf.id).toBe('wf-ai-incident-command');
       expect(wf.nodes.length).toBe(4);
       expect(wf.edges.length).toBe(3);
     });
@@ -100,7 +100,7 @@ describe('Phase 3: Workflow Domain Models & State Store', () => {
     });
 
     it('validates seed workflow as a valid DAG', () => {
-      const validation = validateWorkflowGraph(SEED_SAAS_LAUNCH_WORKFLOW);
+      const validation = validateWorkflowGraph(SEED_AI_INCIDENT_WORKFLOW);
       expect(validation.valid).toBe(true);
       expect(validation.errors).toHaveLength(0);
     });

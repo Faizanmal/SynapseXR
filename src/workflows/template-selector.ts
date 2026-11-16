@@ -1,7 +1,7 @@
 /**
  * TemplateSelector: Catalog and instantiation service for predefined 3D spatial
  * AI agent workflows:
- * 1. AI Launch Privacy Gate (14-day launch readiness with human sign-off)
+ * 1. AI Incident Command (synthetic retrieval leak with human-approved containment)
  * 2. Project Risk Review ("Autonomous Technical & Compliance Risk Audit")
  * 3. Product Idea Evaluation ("Spatial Product Discovery & Feasibility Matrix")
  */
@@ -10,10 +10,10 @@ import {
   CURRENT_WORKFLOW_SCHEMA_VERSION,
   type Workflow,
 } from './domain-types.js';
-import { SEED_SAAS_LAUNCH_WORKFLOW } from './seed-workflow.js';
+import { SEED_AI_INCIDENT_WORKFLOW } from './seed-workflow.js';
 
 export type WorkflowTemplateId =
-  | 'saas-launch-planner'
+  | 'ai-incident-command'
   | 'project-risk-review'
   | 'product-idea-evaluation';
 
@@ -190,12 +190,12 @@ function cloneWorkflowWithErgonomicPositions(wf: Workflow): Workflow {
 
 export const WORKFLOW_TEMPLATES: ReadonlyArray<WorkflowTemplateDescriptor> = [
   {
-    id: 'saas-launch-planner',
-    name: 'AI Launch Privacy Gate',
-    subtitle: '14-Day Launch Readiness + Human Review',
-    missionSummary: SEED_SAAS_LAUNCH_WORKFLOW.mission,
+    id: 'ai-incident-command',
+    name: 'AI Incident Command',
+    subtitle: 'Synthetic Evidence + Reversible Containment',
+    missionSummary: SEED_AI_INCIDENT_WORKFLOW.mission,
     createWorkflow: () =>
-      cloneWorkflowWithErgonomicPositions(SEED_SAAS_LAUNCH_WORKFLOW),
+      cloneWorkflowWithErgonomicPositions(SEED_AI_INCIDENT_WORKFLOW),
   },
   {
     id: 'project-risk-review',
@@ -217,7 +217,7 @@ export const WORKFLOW_TEMPLATES: ReadonlyArray<WorkflowTemplateDescriptor> = [
 
 export class TemplateSelector {
   private isOpen = false;
-  private activeTemplateId: WorkflowTemplateId = 'saas-launch-planner';
+  private activeTemplateId: WorkflowTemplateId = 'ai-incident-command';
 
   listTemplates(): ReadonlyArray<WorkflowTemplateDescriptor> {
     return WORKFLOW_TEMPLATES;

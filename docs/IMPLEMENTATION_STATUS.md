@@ -56,7 +56,7 @@
 ### Phase 3: Workflow Domain Models & State Store (P0/P1)
 - [x] Define TypeScript schemas for `AgentRole`, `AgentStatus`, `WorkflowNode`, `WorkflowEdge`, `Workflow`, `AgentResult`, `WorkflowRun` ([`src/workflows/domain-types.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/domain-types.ts))
 - [x] Implement DAG validation engine detecting cycles (3-color DFS), self-links, missing nodes, and duplicate edges ([`src/workflows/graph-validator.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/graph-validator.ts))
-- [x] Implement seed preset workflow: "Plan a SaaS launch in 14 days" ([`src/workflows/seed-workflow.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/seed-workflow.ts))
+- [x] Implement seed preset workflow: "AI Incident Command" with a synthetic retrieval leak scenario ([`src/workflows/seed-workflow.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/seed-workflow.ts))
 - [x] Implement browser storage adapter with schema versioning and migration ([`src/workflows/storage.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/storage.ts))
 - [x] Implement central `WorkflowStore` with CRUD commands, graph mutation validations, and undo/redo history ([`src/workflows/workflow-store.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/workflow-store.ts))
 - [x] Author comprehensive unit tests covering CRUD, cycles, duplicate edges, persistence, and undo/redo ([`src/tests/workflow-domain.test.ts`](file:///e:/Hackathons/devpost/meta_vr/src/tests/workflow-domain.test.ts))
@@ -106,7 +106,7 @@
 ---
 
 ### Phase 7: Spatial Workflow Graph Editor (P0/P1)
-- [x] Implement `TemplateSelector` with 3 complete workflow templates: `SaaS Launch Planner`, `Project Risk Review`, and `Product Idea Evaluation` ([`src/workflows/template-selector.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/template-selector.ts))
+- [x] Implement `TemplateSelector` with 3 complete workflow templates: `AI Incident Command`, `Project Risk Review`, and `Product Idea Evaluation` ([`src/workflows/template-selector.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/template-selector.ts))
 - [x] Enhance `validateWorkflowGraph` with Kahn's `O(V + E)` topological execution ordering and missing required input detection ([`src/workflows/graph-validator.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/graph-validator.ts))
 - [x] Implement `AgentNodeView`, `ConnectionHandle`, `ConnectionRenderer` (with direction arrow and animated data pulse), `GraphSelectionSystem`, `WorkflowToolbar`, `WorkflowInspector`, and `WorkflowGraphSystem` (`src/workflows/graph-editor/*`)
 - [x] Implement seated ergonomic `autoLayout()`, overlap resolution, node renaming, undo/redo, duplicate, and save/restore across reload ([`src/workflows/workflow-store.ts`](file:///e:/Hackathons/devpost/meta_vr/src/workflows/workflow-store.ts))

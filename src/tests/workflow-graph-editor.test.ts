@@ -36,10 +36,10 @@ describe('Phase 7: Spatial Workflow Graph Editor', () => {
     graphSelectionSystem.setConnectMode(false);
   });
 
-  it('provides the 3 required workflow templates (SaaS Launch, Project Risk Review, Product Idea Evaluation)', () => {
+  it('provides the incident command, project risk, and product idea templates', () => {
     const templates = templateSelector.listTemplates();
     expect(templates.map((t) => t.name)).toEqual([
-      'AI Launch Privacy Gate',
+      'AI Incident Command',
       'Project Risk Review',
       'Product Idea Evaluation',
     ]);
